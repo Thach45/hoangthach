@@ -1,6 +1,4 @@
 'use client';
-
-import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import { motion } from 'framer-motion';
@@ -32,7 +30,7 @@ export default function About() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative">
           {/* Avatar */}
           <div className=" w-full h-96">
-            <div className="absolute left-[-370px] w-full h-full flex items-center">
+            <div className="absolute z-20 left-[-370px] w-full h-full flex items-center">
               <Lanyard position={[0, 0, 20]} gravity={[0, -35, 0]} fov={15} />
             </div>
           </div>
