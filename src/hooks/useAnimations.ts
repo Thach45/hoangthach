@@ -1,3 +1,4 @@
+import Aos from 'aos';
 import { useEffect, RefObject } from 'react';
 
 interface UseAnimationsProps {
@@ -9,8 +10,8 @@ interface UseAnimationsProps {
 export function useAnimations({ heroRef, enableParallax, enableTypewriter }: UseAnimationsProps = {}) {
   useEffect(() => {
     // Initialize AOS
-    const AOS = require('aos');
-    AOS.init({
+    
+    Aos.init({
       duration: 1000,
       once: true,
       easing: 'ease-in-out',

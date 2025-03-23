@@ -5,7 +5,7 @@ import { LanguageProvider } from '../context/LanguageContext';
 import { DarkModeProvider } from '../context/DarkModeContext';
 import PreLoader from './PreLoader';
 import ScrollToTop from './ScrollToTop';
-
+import AOS from 'aos';
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -14,7 +14,7 @@ export default function Layout({ children }: LayoutProps) {
   useEffect(() => {
     // Initialize AOS
     if (typeof window !== 'undefined') {
-      const AOS = require('aos');
+      
       AOS.init({
         duration: 1000,
         once: true,
