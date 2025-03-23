@@ -1,0 +1,17 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://hoangthach.vercel.app
+
+# Sitemaps
+Sitemap: https://hoangthach.vercel.app/sitemap.xml
+
+# Disallow crawling of admin pages
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+
+# Crawl delay
+Crawl-delay: 10
