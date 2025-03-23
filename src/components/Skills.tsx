@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import AOS from 'aos';
+import SkillsSlider from './SkillsSlider';
 
 export default function Skills() {
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function Skills() {
 
         </div>
       </div>
+      <SkillsSlider />
     </section>
   );
 }
