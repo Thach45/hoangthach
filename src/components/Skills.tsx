@@ -2,10 +2,10 @@
 
 import { useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import AOS from 'aos';
 
 export default function Skills() {
   useEffect(() => {
-    const AOS = require('aos');
     AOS.init();
   }, []);
 
