@@ -38,6 +38,16 @@ export default function Lanyard({
   fov = 20,
   transparent = true,
 }: LanyardProps) {
+  // Add reference to track if component is mounted
+  const isMounted = useRef(true);
+
+  // Effect to handle component cleanup
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   return (
     <div className="relative z-0 w-full h-screen flex justify-center items-center transform scale-100 origin-center">
       <Canvas
@@ -49,7 +59,7 @@ export default function Lanyard({
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={1 / 60}>
-          <Band />
+          <Band isMounted={isMounted} />
         </Physics>
         <Environment blur={0.75}>
           <Lightformer
@@ -89,9 +99,10 @@ export default function Lanyard({
 interface BandProps {
   maxSpeed?: number;
   minSpeed?: number;
+  isMounted?: React.RefObject<boolean>;
 }
 
-function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
+function Band({ maxSpeed = 50, minSpeed = 0, isMounted }: BandProps) {
   // Using "any" for refs since the exact types depend on Rapier's internals
   const band = useRef<any>(null);
   const fixed = useRef<any>(null);
@@ -126,6 +137,7 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
   );
   const [dragged, drag] = useState<false | THREE.Vector3>(false);
   const [hovered, hover] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
   const [isSmall, setIsSmall] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
@@ -134,14 +146,61 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
     return false;
   });
 
+  // Add scroll position tracking
+  const handleScroll = () => {
+    if (typeof window !== "undefined" && isMounted?.current) {
+      setScrollY(window.scrollY);
+      
+      // Wake up all physics bodies on scroll
+      [card, j1, j2, j3, fixed].forEach((ref) => {
+        if (ref.current?.wakeUp) {
+          ref.current.wakeUp();
+        }
+      });
+      
+      // Apply a small impulse to the card to make it move
+      if (card.current) {
+        const randomImpulse = {
+          x: (Math.random() - 0.5) * 0.5,
+          y: (Math.random() - 0.5) * 0.5,
+          z: (Math.random() - 0.5) * 0.5,
+        };
+        card.current.applyImpulse(randomImpulse, true);
+      }
+    }
+  };
+
+  // Effect to handle resize
   useEffect(() => {
     const handleResize = (): void => {
-      setIsSmall(window.innerWidth < 1024);
+      if (isMounted?.current) {
+        setIsSmall(window.innerWidth < 1024);
+      }
     };
 
     window.addEventListener("resize", handleResize);
     return (): void => window.removeEventListener("resize", handleResize);
+  }, [isMounted]);
+
+  // Add scroll event listener
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
+
+  // Effect to reactively handle physics body changes on scroll
+  useEffect(() => {
+    if (scrollY > 0 && fixed.current) {
+      // Only run if we've scrolled and the physics bodies exist
+      [card, j1, j2, j3].forEach((ref) => {
+        if (ref.current?.wakeUp) {
+          ref.current.wakeUp();
+        }
+      });
+    }
+  }, [scrollY]);
 
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
@@ -187,14 +246,26 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
           delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
         );
       });
-      curve.points[0].copy(j3.current.translation());
-      curve.points[1].copy(j2.current.lerped);
-      curve.points[2].copy(j1.current.lerped);
-      curve.points[3].copy(fixed.current.translation());
-      band.current.geometry.setPoints(curve.getPoints(32));
-      ang.copy(card.current.angvel());
-      rot.copy(card.current.rotation());
-      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+      
+      // Use a try-catch to handle any potential issues with the physics objects
+      try {
+        curve.points[0].copy(j3.current.translation());
+        curve.points[1].copy(j2.current.lerped);
+        curve.points[2].copy(j1.current.lerped);
+        curve.points[3].copy(fixed.current.translation());
+        
+        if (band.current && band.current.geometry) {
+          band.current.geometry.setPoints(curve.getPoints(32));
+        }
+        
+        if (card.current) {
+          ang.copy(card.current.angvel());
+          rot.copy(card.current.rotation());
+          card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+        }
+      } catch (error) {
+        console.error("Error in animation frame:", error);
+      }
     }
   });
 

@@ -5,6 +5,7 @@ import { motion, useInView } from 'framer-motion';
 import AOS from 'aos';
 import SkillsSlider from './SkillsSlider';
 
+
 export default function Skills() {
   useEffect(() => {
     AOS.init();
@@ -15,6 +16,7 @@ export default function Skills() {
       <div className="container mx-auto px-6">
         <h2 className="text-4xl font-bold text-center mb-16 gradient-text vn">Kỹ năng</h2>
         <h2 className="text-4xl font-bold text-center mb-16 gradient-text en hidden">Skills</h2>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           
           <SkillCard title="Frontend Development" delay={0.1} skills={[

@@ -2,7 +2,9 @@
 import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import { motion } from 'framer-motion';
-import Lanyard from '@/animation/Lanyard/Lanyard';
+
+import Image from 'next/image';
+import RubikCubeExplosion from './RubikCubeExplosion';
 
 
 const skills = [
@@ -27,12 +29,20 @@ export default function About() {
           {isEnglish ? 'About' : 'Về tôi'}
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12  flex items-center relative">
           {/* Avatar */}
-          <div className=" w-full h-96">
-            <div className="absolute z-20 left-[-370px] w-full h-full flex items-center">
-              <Lanyard position={[0, 0, 20]} gravity={[0, -35, 0]} fov={15} />
-            </div>
+          {/* <RubikCubeExplosion /> */}
+          <div className="w-full h-64 flex items-center justify-center ">
+            <Image
+              src="/asset/anh2.png"
+              alt="avatar"
+              width={300}
+              height={300}
+              className="rounded-full object-cover"
+              style={{
+                filter: 'drop-shadow(0 0 10px rgba(0, 0, 0, 0.5))',
+              }}
+            />
           </div>
 
           {/* Thông tin */}

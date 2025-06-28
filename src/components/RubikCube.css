@@ -1,0 +1,124 @@
+/* --- Wrapper & Scene Setup --- */
+/* Thiết lập một "sân khấu" 3D.
+  - display: flex để căn giữa khối cube.
+  - perspective: Tạo chiều sâu. Giá trị càng lớn, hiệu ứng 3D càng nhẹ nhàng. 
+    1200px là một giá trị tốt để bắt đầu.
+  - overflow: hidden để tránh các thanh cuộn không mong muốn.
+*/
+.rubik-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh; /* Chiếm toàn bộ chiều cao màn hình */
+    /* background-color: #222; Nền tối để làm nổi bật khối cube */
+    color: #fff;
+    overflow: hidden;
+  }
+  
+  /* Container trực tiếp của khối cube.
+    - cursor: grab cho biết người dùng có thể tương tác.
+  */
+  .rubik-container {
+    perspective: 1200px;
+    width: 300px;
+    height: 300px;
+    cursor: grab;
+  }
+  
+  .rubik-container:active {
+    cursor: grabbing;
+  }
+  
+  
+  /* --- The Main Cube Assembly --- */
+  /*
+    Đây là đối tượng chính chứa tất cả các cubie.
+    - transform-style: preserve-3d; là thuộc tính QUAN TRỌNG NHẤT. 
+      Nó đảm bảo các phần tử con (cubies) được hiển thị trong không gian 3D của cha,
+      thay vì bị làm phẳng.
+    - transition: giúp các chuyển động mượt mà hơn một chút.
+  */
+  .cube-assembly {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.1s linear;
+  }
+  
+  
+  /* --- Individual Cubies --- */
+  /*
+    Mỗi khối cube nhỏ (cubie).
+    - cũng cần 'preserve-3d' để các mặt (face) của nó hiển thị đúng trong không gian 3D.
+    - background: black; để tạo hiệu ứng viền nhựa đen giữa các sticker.
+    - transition được thêm vào để hiệu ứng 'explode' diễn ra mượt mà.
+  */
+  .cubie {
+    position: absolute;
+    /* Kích thước cubie được định nghĩa trong JS là 66px */
+    width: 66px;
+    height: 66px;
+    background: #1a1a1a; /* Màu nhựa đen, hơi xám một chút */
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  
+  /* --- Cubie Faces (The Stickers) --- */
+  /*
+    Các mặt sticker của mỗi cubie.
+    - position: absolute để định vị chúng bên trong cubie.
+    - width/height nhỏ hơn cubie và được căn giữa để tạo viền đen.
+    - backface-visibility: hidden; để không hiển thị mặt sau của sticker khi nó quay đi.
+    - box-shadow: inset tạo hiệu ứng lõm vào, giúp sticker trông thật hơn.
+  */
+  .face {
+    position: absolute;
+    /* (66px - 60px) / 2 = 3px margin */
+    width: 60px;
+    height: 60px;
+    left: 3px;
+    top: 3px;
+    
+    border-radius: 4px; /* Bo góc nhẹ cho sticker */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.25);
+    backface-visibility: hidden;
+    
+    /* Cung cấp một màu nền mặc định phòng trường hợp class màu không được áp dụng */
+    background-color: #555; 
+  }
+  
+ 
+  
+  /* --- Positioning each face in 3D space --- */
+  /*
+    Đây là phần cốt lõi để tạo hình hộp 3D từ các mặt phẳng 2D.
+    Chúng ta xoay và đẩy mỗi mặt ra xa tâm một khoảng bằng nửa kích thước cubie (33px).
+  */
+  .face.front  { transform: rotateY(  0deg) translateZ(33px); }
+  .face.back   { transform: rotateY(180deg) translateZ(33px); }
+  .face.right  { transform: rotateY( 90deg) translateZ(33px); }
+  .face.left   { transform: rotateY(-90deg) translateZ(33px); }
+  .face.top    { transform: rotateX( 90deg) translateZ(33px); }
+  .face.bottom { transform: rotateX(-90deg) translateZ(33px); }
+  
+  
+  /* --- Color Definitions --- */
+  /*
+    Định nghĩa màu sắc cho các mặt theo chuẩn Rubik's Cube.
+  */
+  .color-red    { background-color: #dc3545; }
+  .color-orange { background-color: #fd7e14; }
+  .color-green  { background-color: #28a745; }
+  .color-blue   { background-color: #007bff; }
+  .color-yellow { background-color: #ffc107; }
+  .color-white  { background-color: #f8f9fa; }
+  
+  /* Mặt ẩn, không cần hiển thị.
+    Sử dụng display: none thay vì visibility: hidden để tối ưu hiệu suất.
+  */
+  .hidden-face {
+    display: none;
+  }
