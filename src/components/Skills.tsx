@@ -2,7 +2,21 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react';
-import { Play, Pause } from 'lucide-react'; // Sử dụng icon cho nút bấm
+import { Play, Pause } from 'lucide-react';
+
+interface SkillItem {
+  name: string;
+  icon: string;
+  invert?: boolean;
+  tags: string[];
+  experience: string;
+  description: string;
+}
+
+interface SkillCategory {
+  title: string;
+  items: SkillItem[];
+}
 
 // 1. DỮ LIỆU ĐƯỢC BỔ SUNG ĐẦY ĐỦ THÔNG TIN CHO CHẾ ĐỘ XEM LƯỚI
 const skillCategories = [
@@ -55,7 +69,7 @@ const allSkillsCategory = {
 const displayCategories = [allSkillsCategory, ...skillCategories];
 
 // Component Lục giác
-const Hexagon = ({ item }) => (
+const Hexagon = ({ item }: { item: SkillItem }) => (
     <div className="flex-shrink-0 mx-4 w-[160px] h-[180px] flex items-center justify-center group">
       <div className="relative w-full h-full flex items-center justify-center">
         <div 
@@ -79,7 +93,7 @@ const Hexagon = ({ item }) => (
             />
           <p className="text-sm font-bold text-white whitespace-nowrap">{item.name}</p>
           <div className="flex flex-wrap justify-center gap-1 mt-2">
-              {item.tags.map(tag => (
+              {item.tags.map((tag: string) => (
                   <span key={tag} className="px-2 py-0.5 bg-cyan-900/70 text-cyan-300 text-[10px] rounded-full">
                       {tag}
                   </span>
@@ -91,7 +105,7 @@ const Hexagon = ({ item }) => (
   );
 
 // Component Slider được cập nhật với CSS animation
-const SkillSlider = ({ items, speed = '40s' }) => {
+const SkillSlider = ({ items, speed = '40s' }: { items: SkillItem[]; speed?: string }) => {
   const duplicatedItems = items.length > 0 ? [...items, ...items] : [];
   return (
     <div className="w-full overflow-hidden relative h-[180px] marquee-container">
@@ -108,7 +122,7 @@ const SkillSlider = ({ items, speed = '40s' }) => {
 };
 
 // Component Thẻ Kỹ năng cho Lưới tĩnh
-const SkillCard = ({ item }) => (
+const SkillCard = ({ item }: { item: SkillItem }) => (
     <motion.div
         className="group relative overflow-hidden rounded-xl bg-slate-800/50 backdrop-blur-md p-6 border border-slate-700/50 transition-all duration-300 hover:shadow-xl hover:bg-slate-800 hover:border-cyan-400"
         initial={{ opacity: 0, y: 20 }}
@@ -138,7 +152,7 @@ const SkillCard = ({ item }) => (
             {item.description}
         </p>
         <div className="flex flex-wrap gap-1.5">
-            {item.tags.map(tag => (
+            {item.tags.map((tag: string) => (
                 <span key={tag} className="px-2.5 py-0.5 bg-slate-700 text-slate-300 text-xs rounded-full">
                     {tag}
                 </span>
@@ -148,7 +162,7 @@ const SkillCard = ({ item }) => (
 );
 
 // Component Lưới tĩnh
-const StaticSkillGrid = ({ items }) => (
+const StaticSkillGrid = ({ items }: { items: SkillItem[] }) => (
     <motion.div 
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         initial={{ opacity: 0 }}
@@ -156,7 +170,7 @@ const StaticSkillGrid = ({ items }) => (
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
     >
-        {items.map(item => (
+        {items.map((item: SkillItem) => (
             <SkillCard key={item.name} item={item} />
         ))}
     </motion.div>
