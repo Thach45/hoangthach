@@ -69,24 +69,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
         <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
         {/* Preload critical assets */}
-        <link
-          rel="preload"
-          href="/asset/planets.png"
-          as="image"
-          type="image/png"
-        />
-        <link
-          rel="preload"
-          href="/asset/stars.png"
-          as="image"
-          type="image/png"
-        />
-        <link
-          rel="preload"
-          href="/asset/mountains.png"
-          as="image"
-          type="image/png"
-        />
+        {/* Consider relying on Next Image priority for above-the-fold imagery to avoid duplicate preloads */}
       </head>
       <body className="min-h-screen antialiased">
         <ErrorBoundary>

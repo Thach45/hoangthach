@@ -28,8 +28,7 @@ export default function Hero() {
           className="text-6xl md:text-8xl font-bold mb-8 gradient-text "
           data-depth="0.1"
         >
-          
-          Backend Developer
+          {isEnglish ? 'Backend Developer' : 'Lập trình viên Backend'}
         </h1>
         <p 
           className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-12 typewriter parallax-element"
@@ -42,10 +41,8 @@ export default function Hero() {
           )}
         </p>
         <div className="parallax-element" data-depth="0.02">
-          <Link href="#projects" legacyBehavior>
-            <a className="bg-teal-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-teal-700 transition-all transform hover:scale-105 inline-block">
-              {isEnglish ? 'View my projects' : 'Xem dự án của tôi'}
-            </a>
+          <Link href="#projects" className="bg-teal-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-teal-700 transition-all transform hover:scale-105 inline-block" aria-label={isEnglish ? 'View my projects' : 'Xem dự án của tôi'}>
+            {isEnglish ? 'View my projects' : 'Xem dự án của tôi'}
           </Link>
         </div>
       </div>
@@ -53,6 +50,7 @@ export default function Hero() {
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2 floating parallax-element"
         data-depth="0.03"
       >
+        <span className="sr-only">{isEnglish ? 'Scroll to projects' : 'Cuộn xuống để xem dự án'}</span>
         <svg 
           className="w-6 h-6 text-teal-600 animate-bounce" 
           fill="none" 
@@ -64,7 +62,7 @@ export default function Hero() {
             strokeLinecap="round" 
             strokeLinejoin="round" 
             strokeWidth="2" 
-            d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            d="M5 10l7 7 7-7"
           />
         </svg>
       </div>

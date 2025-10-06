@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Layout from '../components/Layout';
 import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
@@ -12,37 +12,48 @@ import Contact from '../components/Contact';
 import Footer from '../components/Footer';
 
 export default function Home() {
-  const [scrollY, setScrollY] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const tickingRef = useRef(false);
+  const planetsRef = useRef<HTMLDivElement | null>(null);
+  const starsRef = useRef<HTMLDivElement | null>(null);
+  const mountainsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updateReduced = () => setReducedMotion(mq.matches);
+    updateReduced();
+    mq.addEventListener?.('change', updateReduced);
+
+    const updateParallax = () => {
+      tickingRef.current = false;
+      if (reducedMotion) return;
+      const y = window.scrollY;
+      if (planetsRef.current) planetsRef.current.style.transform = `translate3d(0, ${y * 0.5}px, 0)`;
+      if (starsRef.current) starsRef.current.style.transform = `translate3d(0, ${y * 0.3}px, 0)`;
+      if (mountainsRef.current) mountainsRef.current.style.transform = `translate3d(0, ${y * 0.1}px, 0)`;
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    const onScroll = () => {
+      if (tickingRef.current) return;
+      tickingRef.current = true;
+      requestAnimationFrame(updateParallax);
+    };
 
-  const parallaxStyles = {
-    planets: {
-      transform: `translate3d(0, ${scrollY * 0.5}px, 0)`,
-      transition: 'transform 0.1s linear',
-    },
-    stars: {
-      transform: `translate3d(0, ${scrollY * 0.3}px, 0)`,
-      transition: 'transform 0.1s linear',
-    },
-    mountains: {
-      transform: `translate3d(0, ${scrollY * 0.1}px, 0)`,
-      transition: 'transform 0.1s linear',
-    },
-  };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // Initial apply
+    requestAnimationFrame(updateParallax);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll as EventListener);
+      mq.removeEventListener?.('change', updateReduced);
+    };
+  }, [reducedMotion]);
 
   return (
     <Layout>
       <Navigation />
       <div className="parallax-container">
-        <div className="absolute inset-0" style={parallaxStyles.planets}>
+        <div className="absolute inset-0" ref={planetsRef} style={reducedMotion ? { transform: 'none' } : undefined}>
           <Image
             src="/asset/planets.png"
             alt="planets"
@@ -52,24 +63,22 @@ export default function Home() {
             priority
           />
         </div>
-        <div className="absolute inset-0" style={parallaxStyles.stars}>
+        <div className="absolute inset-0" ref={starsRef} style={reducedMotion ? { transform: 'none' } : undefined}>
           <Image
             src="/asset/stars.png"
             alt="stars"
             fill
             sizes="100vw"
             className="stars object-cover"
-            priority
           />
         </div>
-        <div className="absolute inset-0" style={parallaxStyles.mountains}>
+        <div className="absolute inset-0" ref={mountainsRef} style={reducedMotion ? { transform: 'none' } : undefined}>
           <Image
             src="/asset/mountains.png"
             alt="mountains"
             fill
             sizes="100vw"
             className="mountains object-cover"
-            priority
           />
         </div>
         <Hero />

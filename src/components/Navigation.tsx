@@ -35,22 +35,20 @@ export default function Navigation() {
   return (
     <nav 
       className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur shadow-lg' : 'bg-transparent'
+        isScrolled ? 'bg-white/70 dark:bg-gray-900/70 backdrop-blur-md shadow-md' : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Link href="#" legacyBehavior>
-            <a className="text-2xl font-bold gradient-text">Portfolio</a>
+          <Link href="#" className="text-2xl font-bold gradient-text">
+            Portfolio
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8 items-center">
             {navItems.map((item, index) => (
-              <Link key={index} href={item.href} legacyBehavior>
-                <a className="text-gray-800 dark:text-white hover:text-teal-600 transition-colors">
-                  {isEnglish ? item.en : item.vi}
-                </a>
+              <Link key={index} href={item.href} className="text-gray-800 dark:text-white hover:text-teal-600 transition-colors">
+                {isEnglish ? item.en : item.vi}
               </Link>
             ))}
 
@@ -117,17 +115,17 @@ export default function Navigation() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm"
+            className="md:hidden bg-white/90 dark:bg-gray-900/90 backdrop-blur"
           >
             <div className="container mx-auto px-6 py-4 space-y-4">
               {navItems.map((item, index) => (
-                <Link key={index} href={item.href} legacyBehavior>
-                  <a 
-                    className="block text-gray-800 dark:text-white hover:text-teal-600 transition-colors py-2"
-                    onClick={closeMenu}
-                  >
-                    {isEnglish ? item.en : item.vi}
-                  </a>
+                <Link
+                  key={index}
+                  href={item.href}
+                  className="block text-gray-800 dark:text-white hover:text-teal-600 transition-colors py-2"
+                  onClick={closeMenu}
+                >
+                  {isEnglish ? item.en : item.vi}
                 </Link>
               ))}
 

@@ -223,6 +223,27 @@
   50% { transform: translateY(-10px); }
 }
 
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .parallax-container img,
+  .parallax-element,
+  .floating {
+    transform: none !important;
+  }
+}
+
+/* Better focus styles for keyboard users */
+:focus-visible {
+  outline: 2px solid #00B4DB;
+  outline-offset: 2px;
+}
+
 /* Parallax Effects */
 .parallax-container {
   position: relative;
