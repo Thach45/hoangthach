@@ -3,6 +3,7 @@ import Script from 'next/script'
 import { Metadata } from 'next'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import { siteConfig } from '@/config'
+import Providers from '@/providers/Providers'
 
 export const metadata: Metadata = {
   title: {
@@ -63,7 +64,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
         <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
         <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
@@ -87,9 +88,11 @@ export default function RootLayout({
           type="image/png"
         />
       </head>
-      <body>
+      <body className="min-h-screen antialiased">
         <ErrorBoundary>
-          {children}
+          <Providers>
+            {children}
+          </Providers>
         </ErrorBoundary>
         
         {/* Third-party scripts */}
