@@ -16,6 +16,7 @@ export default function Navigation() {
     { href: '#home', vi: 'Trang chủ', en: 'Home' },
     { href: '#about', vi: 'Giới thiệu', en: 'About' },
     { href: '#skills', vi: 'Kỹ năng', en: 'Skills' },
+    { href: '#imprints', vi: 'Dấu ấn', en: 'Imprints' },
     { href: '#projects', vi: 'Dự án', en: 'Projects' },
     { href: '#contact', vi: 'Liên hệ', en: 'Contact' },
   ];

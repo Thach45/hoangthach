@@ -83,49 +83,17 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col md:flex-row h-[80vh]">
-          {/* Left Side - Media Content */}
+        
           <div className="relative w-full md:w-1/2 h-[300px] md:h-auto">
-            {isImageLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-700">
-                <LoadingSpinner />
-              </div>
-            )}
+            
             <Image
               src={project.image}
               alt={project.title}
               fill
-              className="object-cover"
+              className={`w-full h-full object-cover transition-opacity duration-500 ${isVideoPlaying ? 'opacity-0' : 'opacity-100'}`}
               onLoadingComplete={() => setIsImageLoading(false)}
             />
-            {project.demoVideo && (
-              <div className="absolute inset-0">
-                <video
-                  ref={videoRef}
-                  src={project.demoVideo}
-                  className={`w-full h-full object-cover ${isVideoPlaying ? 'block' : 'hidden'}`}
-                  onLoadedData={() => setIsVideoLoading(false)}
-                />
-                <button
-                  onClick={toggleVideo}
-                  className="absolute inset-0 flex items-center justify-center bg-black/50 hover:bg-black/60 transition-all group"
-                >
-                  {isVideoLoading ? (
-                    <LoadingSpinner className="text-white" />
-                  ) : (
-                    <motion.div
-                      whileHover={{ scale: 1.1 }}
-                      className="w-16 h-16 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm"
-                    >
-                      {isVideoPlaying ? (
-                        <FaPause className="w-6 h-6 text-white" />
-                      ) : (
-                        <FaPlay className="w-6 h-6 text-white ml-1" />
-                      )}
-                    </motion.div>
-                  )}
-                </button>
-              </div>
-            )}
+            
           </div>
 
           {/* Right Side - Project Details */}

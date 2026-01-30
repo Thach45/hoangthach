@@ -7,6 +7,7 @@ import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
 import About from '../components/About';
 import Skills from '../components/Skills';
+import PersonalImprints from '@/components/PersonalImprints';
 import Projects from '../components/Projects';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
@@ -18,7 +19,6 @@ export default function Home() {
   const starsRef = useRef<HTMLDivElement | null>(null);
   const mountainsRef = useRef<HTMLDivElement | null>(null);
   const rocketRef = useRef<HTMLDivElement | null>(null);
-  const rocketAnimRef = useRef({ x: 0, y: 0, z: 0, scale: 1, rot: 0 });
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -104,6 +104,7 @@ export default function Home() {
       </div>
       <About />
       <Skills />
+      <PersonalImprints variant="preview" />
       <Projects />
       <Contact />
       <Footer />
