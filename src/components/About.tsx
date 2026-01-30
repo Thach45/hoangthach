@@ -2,9 +2,8 @@
 import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import { motion } from 'framer-motion';
-
 import Image from 'next/image';
-import Particles from '@/animation/Backgrounds/Particles';
+
 
 
 const skills = [
