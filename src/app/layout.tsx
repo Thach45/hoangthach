@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     creator: '@hoangthach',
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: '/anh2.png',
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png',
   },
