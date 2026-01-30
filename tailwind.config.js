@@ -53,7 +53,16 @@ module.exports = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+        /**
+         * Brand color system
+         * - Change these CSS vars in `src/app/globals.css` to switch the site's accent color.
+         * - Keeps component classNames stable (`text-brand`, `from-brandFrom`, etc.).
+         */
+        brand: 'hsl(var(--brand) / <alpha-value>)',
+        brandFrom: 'hsl(var(--brand-from) / <alpha-value>)',
+        brandTo: 'hsl(var(--brand-to) / <alpha-value>)',
+        brandCyan: 'hsl(var(--brand-cyan) / <alpha-value>)',
   		},
   		backgroundImage: {
   			'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

@@ -29,6 +29,20 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+
+    /**
+     * Brand accent (single source of truth)
+     * Current: #b199db
+     * To revert to legacy look, set:
+     * - --brand-from: 190.7 100% 42.9%;  (#00B4DB)
+     * - --brand-to:   195.3 100% 34.5%;  (#0083B0)
+     * - --brand:      pick one of the above (or a mid tone)
+     */
+    --brand: 261.8 47.8% 64%;
+    --brand-from: 261.8 47.8% 64%;
+    --brand-to: 261.8 47.8% 64%;
+    /* Secondary nebula accent: #22D3EE */
+    --brand-cyan: 187.9 85.7% 53.3%;
   }
 
   .dark {
@@ -56,6 +70,12 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    /* Brand accent in dark mode (can be customized separately) */
+    --brand: 261.8 47.8% 72.9%;
+    --brand-from: 261.8 47.8% 72.9%;
+    --brand-to: 261.8 47.8% 72.9%;
+    --brand-cyan: 187.9 85.7% 53.3%;
   }
 
   * {
@@ -69,10 +89,21 @@
 
 /* Gradient Text */
 .gradient-text {
-  background: linear-gradient(45deg, #00B4DB, #0083B0);
+  background: linear-gradient(45deg, hsl(var(--brand-from)), hsl(var(--brand-to)));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+@layer utilities {
+  /* Tailwind utilities for brand styling */
+  .bg-brand-gradient {
+    @apply bg-gradient-to-r from-brandFrom to-brandTo;
+  }
+
+  .text-brand-gradient {
+    @apply bg-brand-gradient bg-clip-text text-transparent;
+  }
 }
 
 /* Scroll Progress */
@@ -83,7 +114,7 @@
   width: 100%;
   height: 2px;
   z-index: 100;
-  background: linear-gradient(to right, #00B4DB var(--scroll), transparent 0);
+  background: linear-gradient(to right, hsl(var(--brand-from)) var(--scroll), transparent 0);
 }
 
 /* Cursor Glow */
@@ -92,7 +123,7 @@
   position: fixed;
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(0, 180, 219, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, hsl(var(--brand-from) / 0.1) 0%, transparent 70%);
   pointer-events: none;
   transform: translate(-50%, -50%);
   z-index: -1;
@@ -114,7 +145,7 @@
   pointer-events: none;
   width: 10px;
   height: 10px;
-  background: #00B4DB;
+  background: hsl(var(--brand-from));
   border-radius: 50%;
   animation: particle 3s ease-in-out;
   transform: translate(0, 0);
@@ -160,7 +191,7 @@
   width: 50px;
   height: 50px;
   border: 5px solid #f3f3f3;
-  border-top: 5px solid #00B4DB;
+  border-top: 5px solid hsl(var(--brand-from));
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -240,7 +271,7 @@
 
 /* Better focus styles for keyboard users */
 :focus-visible {
-  outline: 2px solid #00B4DB;
+  outline: 2px solid hsl(var(--brand-from));
   outline-offset: 2px;
 }
 
@@ -331,6 +362,6 @@
 }
 
 .skill-card-back {
-  background: linear-gradient(135deg, #00B4DB, #0083B0);
+  background: linear-gradient(135deg, hsl(var(--brand-from)), hsl(var(--brand-to)));
   transform: rotateY(180deg);
 }

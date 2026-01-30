@@ -80,7 +80,7 @@ export default function SkillsSlider() {
                     </div>
                     
                     <div className="flex-1 text-center md:text-left">
-                      <h3 className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-r from-teal-500 to-blue-500 bg-clip-text text-transparent">
+                      <h3 className="text-2xl md:text-3xl font-bold mb-4 text-brand-gradient">
                         {skills[currentSlide].name}
                       </h3>
                       
@@ -98,7 +98,7 @@ export default function SkillsSlider() {
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.1 }}
-                            className="px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-teal-500/10 to-blue-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20"
+                            className="px-4 py-2 rounded-full text-sm font-medium bg-brand/10 text-brand dark:text-brand border border-brand/20"
                           >
                             {tech}
                           </motion.span>
@@ -114,7 +114,7 @@ export default function SkillsSlider() {
                         onClick={() => setCurrentSlide(index)}
                         className={`w-2.5 h-2.5 rounded-full transition-colors duration-300 ${
                           index === currentSlide 
-                            ? 'bg-teal-500' 
+                            ? 'bg-brand' 
                             : 'bg-gray-300 dark:bg-gray-600'
                         }`}
                         aria-label={`Go to slide ${index + 1}`}

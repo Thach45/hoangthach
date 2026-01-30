@@ -96,7 +96,7 @@ export default function Projects() {
           <AnimatePresence mode="wait">
             {isLoading ? (
               // Show skeletons while loading
-              [...Array(6)].map((_, i) => (
+              [...Array(3)].map((_, i) => (
                 <motion.div
                   key={`skeleton-${i}`}
                   initial={{ opacity: 0 }}
@@ -108,8 +108,8 @@ export default function Projects() {
                 </motion.div>
               ))
             ) : filteredProjects.length > 0 ? (
-              // Show actual projects
-              filteredProjects.map((project, index) => (
+              // Show actual projects limit 3
+              filteredProjects.slice(0, 3).map((project, index) => (
                 <ProjectCard
                   key={project.id}
                   project={project}
@@ -136,7 +136,7 @@ export default function Projects() {
           <div className="mt-12 text-center">
             <button
               onClick={() => setPage(p => p + 1)}
-              className="px-6 py-3 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-full hover:from-teal-600 hover:to-blue-600 transition-colors"
+              className="px-6 py-3 bg-brand-gradient text-white rounded-full hover:brightness-110 transition-all"
             >
               {isEnglish ? 'Load More Projects' : 'Xem thêm dự án'}
             </button>
@@ -193,6 +193,7 @@ function ProjectCard({ project, isEnglish, index, onClick }: ProjectCardProps) {
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-0 group-hover:opacity-70 transition-opacity">
           <div className="absolute bottom-4 left-4">
+          
             <h3 className="text-white text-xl font-bold">{project.title}</h3>
             <p className="text-gray-300">{project.techStack}</p>
           </div>
@@ -200,6 +201,10 @@ function ProjectCard({ project, isEnglish, index, onClick }: ProjectCardProps) {
       </div>
 
       <div className="p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 leading-snug line-clamp-2">
+          {project.title}
+        </h3>
+       
         <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
           {isEnglish ? project.description.en : project.description.vi}
         </p>
@@ -208,7 +213,7 @@ function ProjectCard({ project, isEnglish, index, onClick }: ProjectCardProps) {
           {project.tech.map((tech: string, techIndex: number) => (
             <motion.span
               key={techIndex}
-              className="px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-teal-500/10 to-blue-500/10 text-teal-600 dark:text-teal-400"
+              className="px-3 py-1 rounded-full text-sm font-medium border border-brandCyan/20 hover:border-brandCyan/40 bg-brand/10 text-brand dark:text-brand"
               whileHover={{ scale: 1.1 }}
             >
               {tech}
@@ -221,14 +226,14 @@ function ProjectCard({ project, isEnglish, index, onClick }: ProjectCardProps) {
 
         {/* Project Metrics */}
         <div className="grid grid-cols-2 gap-2 mb-4">
-          <div className="text-center p-2 rounded-lg bg-gradient-to-br from-teal-500/10 to-blue-500/10">
-            <div className="text-sm font-semibold text-teal-600 dark:text-teal-400">
+          <div className="text-center p-2 rounded-lg bg-brand/10">
+            <div className="text-sm font-semibold text-brand dark:text-brand">
               {project.metrics.commits}
             </div>
             <div className="text-xs text-gray-500">Commits</div>
           </div>
-          <div className="text-center p-2 rounded-lg bg-gradient-to-br from-teal-500/10 to-blue-500/10">
-            <div className="text-sm font-semibold text-teal-600 dark:text-teal-400">
+          <div className="text-center p-2 rounded-lg bg-brand/10">
+            <div className="text-sm font-semibold text-brand dark:text-brand">
               {project.metrics.pullRequests}
             </div>
             <div className="text-xs text-gray-500">PRs</div>
@@ -263,7 +268,7 @@ function ProjectCard({ project, isEnglish, index, onClick }: ProjectCardProps) {
             {project.demoVideo && (
               <motion.span
                 whileHover={{ scale: 1.1 }}
-                className="text-teal-600"
+                className="text-brand"
               >
                 <svg
                   className="w-5 h-5"
@@ -288,7 +293,7 @@ function ProjectCard({ project, isEnglish, index, onClick }: ProjectCardProps) {
             )}
           </div>
 
-          <div className="text-teal-600 hover:text-teal-700 font-medium">
+          <div className="text-brand hover:opacity-90 font-medium">
             {isEnglish ? 'View Details →' : 'Xem chi tiết →'}
           </div>
         </div>

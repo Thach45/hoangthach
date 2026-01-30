@@ -59,7 +59,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
       onClick={() => setActiveTab(tab)}
       className={`px-4 py-2 rounded-lg font-medium transition-all ${
         activeTab === tab
-          ? 'bg-gradient-to-r from-teal-500 to-blue-500 text-white'
+          ? 'bg-brand text-white shadow-sm'
           : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
       }`}
     >
@@ -140,7 +140,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
 
             {/* Header */}
             <div className="p-6 border-b dark:border-gray-700">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-blue-500 bg-clip-text text-transparent">
+              <h2 className="text-3xl font-bold text-brand">
                 {project.title}
               </h2>
               <p className="mt-2 text-gray-600 dark:text-gray-300">
@@ -198,7 +198,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                           {project.tech.map((tech, index) => (
                             <motion.span
                               key={index}
-                              className="px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-teal-500/10 to-blue-500/10 text-teal-600 dark:text-teal-400"
+                              className="px-3 py-1 rounded-full text-sm font-medium bg-brand/10 text-brand dark:bg-brand/15 dark:text-brand"
                               whileHover={{ scale: 1.05 }}
                             >
                               {tech}
@@ -215,12 +215,12 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                         (challenge, index) => (
                           <div key={index} className="p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
                             <div className="flex items-start gap-3 mb-3">
-                              <span className="mt-1 text-teal-500">•</span>
+                              <span className="mt-1 text-brand">•</span>
                               <h4 className="font-medium text-gray-800 dark:text-gray-200">
                                 {challenge}
                               </h4>
                             </div>
-                            <div className="ml-6 pl-3 border-l-2 border-teal-500/30">
+                            <div className="ml-6 pl-3 border-l-2 border-brand/40">
                               <p className="text-gray-600 dark:text-gray-400">
                                 {isEnglish ? project.solutions.en[index] : project.solutions.vi[index]}
                               </p>
@@ -233,26 +233,26 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
 
                   {activeTab === 'metrics' && (
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="p-6 rounded-lg bg-gradient-to-br from-teal-500/10 to-blue-500/10">
-                        <div className="text-3xl font-bold text-teal-600 dark:text-teal-400">
+                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/15">
+                        <div className="text-3xl font-bold text-brand">
                           {project.metrics.commits}
                         </div>
                         <div className="text-sm text-gray-600 dark:text-gray-400">Commits</div>
                       </div>
-                      <div className="p-6 rounded-lg bg-gradient-to-br from-teal-500/10 to-blue-500/10">
-                        <div className="text-3xl font-bold text-teal-600 dark:text-teal-400">
+                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/15">
+                        <div className="text-3xl font-bold text-brand">
                           {project.metrics.pullRequests}
                         </div>
                         <div className="text-sm text-gray-600 dark:text-gray-400">Pull Requests</div>
                       </div>
-                      <div className="p-6 rounded-lg bg-gradient-to-br from-teal-500/10 to-blue-500/10">
-                        <div className="text-3xl font-bold text-teal-600 dark:text-teal-400">
+                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/15">
+                        <div className="text-3xl font-bold text-brand">
                           {project.metrics.issues}
                         </div>
                         <div className="text-sm text-gray-600 dark:text-gray-400">Issues</div>
                       </div>
-                      <div className="p-6 rounded-lg bg-gradient-to-br from-teal-500/10 to-blue-500/10">
-                        <div className="text-3xl font-bold text-teal-600 dark:text-teal-400">
+                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/15">
+                        <div className="text-3xl font-bold text-brand">
                           {Math.round(project.metrics.timeSpent / 24)}
                         </div>
                         <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -282,7 +282,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-blue-500 text-white hover:from-teal-600 hover:to-blue-600 transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-brand text-brand hover:bg-brand/10 transition-colors dark:border-brand dark:text-brand dark:hover:bg-brand/10"
               >
                 <FaExternalLinkAlt />
                 {isEnglish ? 'Live Demo' : 'Xem Demo'}

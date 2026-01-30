@@ -76,7 +76,7 @@ export default function About() {
                 {skills.map((skill, index) => (
                   <motion.span 
                     key={index}
-                    className="px-4 py-2 bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300 rounded-full"
+                    className="px-4 py-2 bg-brand/10 dark:bg-brand/15 text-brand dark:text-brand rounded-full"
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -95,7 +95,7 @@ export default function About() {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 viewport={{ once: false }}
               >
-                <Link href="#contact" className="px-6 py-3 bg-teal-600 text-white rounded-full hover:bg-teal-700 transition">
+                <Link href="#contact" className="px-6 py-3 bg-brand text-white rounded-full hover:brightness-110 transition-all">
                   {isEnglish ? 'Contact now' : 'Liên hệ ngay'}
                 </Link>
               </motion.div>

@@ -43,7 +43,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             <div className="space-y-4">
               <button
                 onClick={this.handleReload}
-                className="bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700 transition-colors inline-flex items-center justify-center space-x-2"
+                className="bg-brand text-white px-6 py-3 rounded-lg hover:brightness-110 transition-all inline-flex items-center justify-center space-x-2"
               >
                 <svg
                   className="w-5 h-5"
@@ -62,7 +62,7 @@ export default class ErrorBoundary extends Component<Props, State> {
               </button>
               <a
                 href="/"
-                className="text-teal-600 hover:text-teal-700 transition-colors inline-block"
+                className="text-brand hover:opacity-90 transition-colors inline-block"
               >
                 Return to homepage
               </a>

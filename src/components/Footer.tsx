@@ -49,7 +49,7 @@ export default function Footer() {
           <nav className="flex flex-wrap justify-center space-x-6 mb-8">
             {navItems.map((item, index) => (
               <Link key={index} href={item.href} legacyBehavior>
-                <a className="text-gray-600 dark:text-gray-400 hover:text-teal-600 transition-colors">
+                <a className="text-gray-600 dark:text-gray-400 hover:text-brand transition-colors">
                   {isEnglish ? item.en : item.vi}
                 </a>
               </Link>
@@ -63,7 +63,7 @@ export default function Footer() {
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 dark:text-gray-400 hover:text-teal-600 transition-colors"
+                className="text-gray-600 dark:text-gray-400 hover:text-brand transition-colors"
               >
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                   {social.icon}

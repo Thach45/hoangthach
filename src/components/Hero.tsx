@@ -41,7 +41,7 @@ export default function Hero() {
           )}
         </p>
         <div className="parallax-element" data-depth="0.02">
-          <Link href="#projects" className="bg-teal-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-teal-700 transition-all transform hover:scale-105 inline-block" aria-label={isEnglish ? 'View my projects' : 'Xem dự án của tôi'}>
+          <Link href="#projects" className="bg-brand text-white px-8 py-4 rounded-full text-lg font-medium hover:brightness-110 transition-all transform hover:scale-105 inline-block" aria-label={isEnglish ? 'View my projects' : 'Xem dự án của tôi'}>
             {isEnglish ? 'View my projects' : 'Xem dự án của tôi'}
           </Link>
         </div>
@@ -52,7 +52,7 @@ export default function Hero() {
       >
         <span className="sr-only">{isEnglish ? 'Scroll to projects' : 'Cuộn xuống để xem dự án'}</span>
         <svg 
-          className="w-6 h-6 text-teal-600 animate-bounce" 
+          className="w-6 h-6 text-brand animate-bounce" 
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 24 24"

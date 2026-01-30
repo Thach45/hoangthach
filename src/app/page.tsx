@@ -17,6 +17,8 @@ export default function Home() {
   const planetsRef = useRef<HTMLDivElement | null>(null);
   const starsRef = useRef<HTMLDivElement | null>(null);
   const mountainsRef = useRef<HTMLDivElement | null>(null);
+  const rocketRef = useRef<HTMLDivElement | null>(null);
+  const rocketAnimRef = useRef({ x: 0, y: 0, z: 0, scale: 1, rot: 0 });
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -31,6 +33,14 @@ export default function Home() {
       if (planetsRef.current) planetsRef.current.style.transform = `translate3d(0, ${y * 0.5}px, 0)`;
       if (starsRef.current) starsRef.current.style.transform = `translate3d(0, ${y * 0.3}px, 0)`;
       if (mountainsRef.current) mountainsRef.current.style.transform = `translate3d(0, ${y * 0.1}px, 0)`;
+      if (rocketRef.current) {
+        const x = y * 1;     
+        const yMove = y * 1; 
+        const z = y * 0.4;
+        const size =y * 0.02 + 0
+      
+        rocketRef.current.style.transform = `translate3d(${x}px, ${yMove}px, ${z}px) scale(${size}) rotate(135deg)`;
+      }
     };
 
     const onScroll = () => {
@@ -79,6 +89,15 @@ export default function Home() {
             fill
             sizes="100vw"
             className="mountains object-cover"
+          />
+        </div>
+        <div className="absolute w-[100px] z-20  h-[100px] left-0 top-[20%]" ref={rocketRef} style={reducedMotion ? { transform: 'none' } : undefined}>
+          <Image
+            src="/asset/rocket.png"
+            alt="rocket"
+            fill
+            sizes="100vw"
+            className="rocket object-cover"
           />
         </div>
         <Hero />

@@ -73,7 +73,7 @@ export default function Contact() {
               <div className="space-y-4">
                 {Object.entries(contactInfo).map(([key, info]) => (
                   <div key={key} className="flex items-start space-x-4">
-                    <svg className="w-6 h-6 text-teal-600 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 text-brand mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       {key === 'email' && (
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       )}
@@ -112,7 +112,7 @@ export default function Contact() {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-teal-600 transition-colors"
+                    className="text-gray-600 hover:text-brand transition-colors"
                   >
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                       {social.icon}
@@ -140,7 +140,7 @@ export default function Contact() {
                       type="text"
                       id="name"
                       name="name"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-brand focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                       placeholder={isEnglish ? 'John Doe' : 'Nguyen Van A'}
                       required
                     />
@@ -153,7 +153,7 @@ export default function Contact() {
                       type="email"
                       id="email"
                       name="email"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-brand focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                       placeholder="email@example.com"
                       required
                     />
@@ -167,7 +167,7 @@ export default function Contact() {
                     type="text"
                     id="subject"
                     name="subject"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-brand focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     placeholder="..."
                     required
                   />
@@ -180,7 +180,7 @@ export default function Contact() {
                     id="message"
                     name="message"
                     rows={4}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-brand focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none"
                     placeholder="..."
                     required
                   ></textarea>
@@ -194,7 +194,7 @@ export default function Contact() {
                 >
                   <button
                     type="submit"
-                    className="w-full bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center space-x-2"
+                    className="w-full bg-brand text-white px-6 py-3 rounded-lg hover:brightness-110 transition-all flex items-center justify-center space-x-2"
                   >
                     <span>{isEnglish ? 'Send Message' : 'Gửi tin nhắn'}</span>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

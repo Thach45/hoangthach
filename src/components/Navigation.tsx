@@ -41,20 +41,20 @@ export default function Navigation() {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link href="#" className="text-2xl font-bold gradient-text">
-            Portfolio
+            Hoang Thach
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8 items-center">
             {navItems.map((item, index) => (
-              <Link key={index} href={item.href} className="text-gray-800 dark:text-white hover:text-teal-600 transition-colors">
+              <Link key={index} href={item.href} className="text-gray-800 dark:text-white hover:text-brand transition-colors">
                 {isEnglish ? item.en : item.vi}
               </Link>
             ))}
 
             <button 
               onClick={toggleDarkMode}
-              className="text-gray-800 dark:text-white hover:text-teal-600 transition-colors"
+              className="text-gray-800 dark:text-white hover:text-brand transition-colors"
               aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               {isDarkMode ? (
@@ -78,7 +78,7 @@ export default function Navigation() {
                   onChange={toggleLanguage}
                   aria-label="Toggle language"
                 />
-                <div className="w-14 h-7 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-7 peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all after:shadow-sm" />
+                <div className="w-14 h-7 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-7 peer-checked:bg-brand after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all after:shadow-sm" />
               </label>
               <span className="text-sm font-medium text-gray-800 dark:text-white">EN</span>
             </div>
@@ -86,7 +86,7 @@ export default function Navigation() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-gray-800 dark:text-white hover:text-teal-600 transition-colors"
+            className="md:hidden text-gray-800 dark:text-white hover:text-brand transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMenuOpen}
@@ -122,7 +122,7 @@ export default function Navigation() {
                 <Link
                   key={index}
                   href={item.href}
-                  className="block text-gray-800 dark:text-white hover:text-teal-600 transition-colors py-2"
+                  className="block text-gray-800 dark:text-white hover:text-brand transition-colors py-2"
                   onClick={closeMenu}
                 >
                   {isEnglish ? item.en : item.vi}
@@ -132,7 +132,7 @@ export default function Navigation() {
               <div className="flex items-center justify-between py-2">
                 <button 
                   onClick={toggleDarkMode}
-                  className="text-gray-800 dark:text-white hover:text-teal-600 transition-colors"
+                  className="text-gray-800 dark:text-white hover:text-brand transition-colors"
                   aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
                 >
                   {isDarkMode ? 'Light Mode' : 'Dark Mode'}

@@ -33,11 +33,11 @@ export default function ProjectProgress({ project, className = '' }: ProjectProg
         <span className="text-gray-600 dark:text-gray-400">
           {isEnglish ? 'Project Progress' : 'Tiến độ dự án'}
         </span>
-        <span className="text-teal-600 font-medium">{progress}%</span>
+        <span className="text-brand font-medium">{progress}%</span>
       </div>
       <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
         <motion.div
-          className="h-full bg-teal-600 rounded-full"
+          className="h-full bg-brand rounded-full from-brand to-brand/50"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 1, ease: "easeOut" }}

@@ -38,7 +38,7 @@ export default function PreLoader() {
           width: 50px;
           height: 50px;
           border: 5px solid #f3f3f3;
-          border-top: 5px solid var(--color-primary, #00B4DB);
+          border-top: 5px solid hsl(var(--brand-from));
           border-radius: 50%;
           animation: spin 1s linear infinite;
         }
