@@ -40,10 +40,30 @@ export default function Hero() {
             <>Xin chào, tôi là <span className="gradient-text text-[28px]">Hoàng Thạch</span></>
           )}
         </p>
-        <div className="parallax-element" data-depth="0.02">
+        <div className="parallax-element flex items-center justify-center gap-4 flex-wrap" data-depth="0.02">
           <Link href="#projects" className="bg-brand text-white px-8 py-4 rounded-full text-lg font-medium hover:brightness-110 transition-all transform hover:scale-105 inline-block" aria-label={isEnglish ? 'View my projects' : 'Xem dự án của tôi'}>
             {isEnglish ? 'View my projects' : 'Xem dự án của tôi'}
           </Link>
+          <a
+            href="/cv.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-brand text-brand px-6 py-3 rounded-full text-base font-medium hover:bg-brand/10 transition-all transform hover:scale-105 inline-flex items-center gap-2"
+            aria-label={isEnglish ? 'View backend CV' : 'Xem CV backend'}
+          >
+            <span>{isEnglish ? 'View CV' : 'Xem CV'}</span>
+            <span className="px-2 py-0.5 rounded-full text-xs bg-brand/15 text-brand">Backend</span>
+          </a>
+          <a
+            href="/cv_fullstack.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-brandCyan text-brandCyan px-6 py-3 rounded-full text-base font-medium hover:bg-brandCyan/10 transition-all transform hover:scale-105 inline-flex items-center gap-2"
+            aria-label={isEnglish ? 'View fullstack CV' : 'Xem CV fullstack'}
+          >
+            <span>{isEnglish ? 'View CV' : 'Xem CV'}</span>
+            <span className="px-2 py-0.5 rounded-full text-xs bg-brandCyan/15 text-brandCyan">Fullstack</span>
+          </a>
         </div>
       </div>
       <div 
