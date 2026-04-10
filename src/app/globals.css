@@ -71,11 +71,11 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
 
-    /* Brand accent in dark mode (can be customized separately) */
-    --brand: 261.8 47.8% 72.9%;
-    --brand-from: 261.8 47.8% 72.9%;
-    --brand-to: 261.8 47.8% 72.9%;
-    --brand-cyan: 187.9 85.7% 53.3%;
+    /* Brand accent in dark mode: increase contrast to avoid blending */
+    --brand: 267 72% 78%;
+    --brand-from: 267 72% 78%;
+    --brand-to: 187.9 85.7% 60%;
+    --brand-cyan: 187.9 92% 62%;
   }
 
   * {

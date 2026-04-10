@@ -3,7 +3,8 @@ const nextConfig = {
   images: {
     domains: [
       'upload.wikimedia.org',
-      'www.svgrepo.com'
+      'www.svgrepo.com',
+      'res.cloudinary.com'
     ],
   },
   // Allow importing SVG files

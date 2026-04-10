@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose } from 'react-icons/io5';
 import { FaGithub, FaShare, FaPlay, FaPause, FaExternalLinkAlt } from 'react-icons/fa';
-import { useState, useRef } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import { useToast } from './Toast';
 
@@ -23,6 +23,25 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'challenges' | 'metrics'>('overview');
   const videoRef = useRef<HTMLVideoElement>(null);
+  const galleryImages = useMemo(() => {
+    const images = [project.image, ...(project.gallery ?? [])].filter(Boolean);
+    return Array.from(new Set(images));
+  }, [project]);
+  const [activeImage, setActiveImage] = useState(galleryImages[0] || project.image);
+
+  useEffect(() => {
+    setActiveImage(galleryImages[0] || project.image);
+    setIsVideoPlaying(false);
+    setIsImageLoading(true);
+  }, [galleryImages, project.image]);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, []);
 
   const shareProject = async () => {
     try {
@@ -48,7 +67,10 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         videoRef.current.pause();
       } else {
         setIsVideoLoading(true);
-        videoRef.current.play().catch(console.error);
+        videoRef.current
+          .play()
+          .then(() => setIsVideoLoading(false))
+          .catch(console.error);
       }
       setIsVideoPlaying(!isVideoPlaying);
     }
@@ -79,45 +101,101 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         initial={{ scale: 0.95, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.95, y: 20 }}
-        className="relative w-full max-w-5xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden"
+        className="relative w-full max-w-6xl h-[88vh] rounded-2xl shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex flex-col md:flex-row h-[80vh]">
-        
-          <div className="relative w-full md:w-1/2 h-[300px] md:h-auto">
-            
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              className={`w-full h-full object-cover transition-opacity duration-500 ${isVideoPlaying ? 'opacity-0' : 'opacity-100'}`}
-              onLoadingComplete={() => setIsImageLoading(false)}
+        <div className="absolute inset-0">
+          {isImageLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-black/80 z-20">
+              <LoadingSpinner />
+            </div>
+          )}
+          <Image
+            src={activeImage}
+            alt={project.title}
+            fill
+            className={`w-full h-full object-cover transition-opacity duration-300 ${isVideoPlaying ? 'opacity-0' : 'opacity-100'}`}
+            onLoadingComplete={() => setIsImageLoading(false)}
+          />
+          {project.demoVideo && (
+            <video
+              ref={videoRef}
+              
+              src={project.demoVideo}
+              muted
+              className={`absolute inset-0 w-full h-full object-cover bg-black ${isVideoPlaying ? 'block' : 'hidden'}`}
+              onLoadedData={() => setIsVideoLoading(false)}
             />
-            
+          )}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/45 to-black/75" />
+        </div>
+
+        {/* Global controls */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-40 p-2 rounded-full bg-black/45 text-white hover:bg-black/65 transition-colors"
+        >
+          <IoClose size={20} />
+        </button>
+        {project.demoVideo && (
+          <button
+            onClick={toggleVideo}
+            className="absolute top-4 right-16 z-40 h-10 w-10 rounded-full bg-black/45 text-white flex items-center justify-center hover:bg-black/65 transition-colors"
+            aria-label={isVideoPlaying ? 'Pause video' : 'Play video'}
+          >
+            {isVideoLoading ? (
+              <LoadingSpinner className="text-white" />
+            ) : isVideoPlaying ? (
+              <FaPause className="w-4 h-4" />
+            ) : (
+              <FaPlay className="w-4 h-4 ml-0.5" />
+            )}
+          </button>
+        )}
+
+        {galleryImages.length > 1 && (
+          <div className="absolute left-4 bottom-4 z-30 flex items-center gap-2 overflow-x-auto max-w-[50%]">
+            {galleryImages.slice(0, 5).map((img, index) => (
+              <button
+                key={`${project.id}-modal-thumb-${index}`}
+                onClick={() => {
+                  setIsVideoPlaying(false);
+                  setIsImageLoading(true);
+                  setActiveImage(img);
+                }}
+                className={`relative h-14 w-20 rounded-md overflow-hidden border-2 transition-all ${
+                  img === activeImage
+                    ? 'border-brand shadow-md'
+                    : 'border-white/30 hover:border-white/60'
+                }`}
+                aria-label={`Preview ${index + 1}`}
+              >
+                <Image
+                  src={img}
+                  alt={`${project.title} screenshot ${index + 1}`}
+                  fill
+                  className="object-cover"
+                />
+              </button>
+            ))}
           </div>
+        )}
 
-          {/* Right Side - Project Details */}
-          <div className="relative flex-1 flex flex-col h-full">
-            {/* Close Button */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-            >
-              <IoClose size={20} />
-            </button>
-
+        {/* Floating info card */}
+        <div className="absolute inset-x-4 bottom-4 md:inset-x-auto md:right-4 z-30 md:w-[48%] h-[calc(88vh-2rem)] bg-white/95 dark:bg-black/50 backdrop-blur-md rounded-xl shadow-xl border border-white/20 dark:border-white/15 overflow-hidden">
+          <div className="relative flex h-full flex-col min-h-0">
             {/* Header */}
-            <div className="p-6 border-b dark:border-gray-700">
+            <div className="p-6 border-b border-white/20 dark:border-white/10">
               <h2 className="text-3xl font-bold text-brand">
                 {project.title}
               </h2>
-              <p className="mt-2 text-gray-600 dark:text-gray-300">
+              <p className="mt-2 text-gray-600 dark:text-white">
                 {isEnglish ? project.description.en : project.description.vi}
               </p>
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-2 p-4 border-b dark:border-gray-700">
+            <div className="flex gap-2 p-4 border-b dark:border-white/10">
               <TabButton 
                 tab="overview" 
                 label={isEnglish ? "Overview" : "Tổng quan"} 
@@ -133,7 +211,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto p-6 bg-white/70 dark:bg-black/50">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTab}
@@ -181,15 +259,18 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                     <div className="space-y-6">
                       {(isEnglish ? project.challenges.en : project.challenges.vi).map(
                         (challenge, index) => (
-                          <div key={index} className="p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                          <div
+                            key={index}
+                            className="p-4 rounded-xl bg-white/95 dark:bg-black/60 border border-gray-200 dark:border-white/10 shadow-sm"
+                          >
                             <div className="flex items-start gap-3 mb-3">
-                              <span className="mt-1 text-brand">•</span>
-                              <h4 className="font-medium text-gray-800 dark:text-gray-200">
+                              <span className="mt-1 text-brand font-bold">•</span>
+                              <h4 className="font-semibold text-gray-900 dark:text-white leading-relaxed">
                                 {challenge}
                               </h4>
                             </div>
-                            <div className="ml-6 pl-3 border-l-2 border-brand/40">
-                              <p className="text-gray-600 dark:text-gray-400">
+                            <div className="ml-6 pl-3 border-l-2 border-brand/55">
+                              <p className="text-gray-700 dark:text-gray-200 leading-relaxed">
                                 {isEnglish ? project.solutions.en[index] : project.solutions.vi[index]}
                               </p>
                             </div>
@@ -201,29 +282,29 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
 
                   {activeTab === 'metrics' && (
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/15">
+                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/20">
                         <div className="text-3xl font-bold text-brand">
                           {project.metrics.commits}
                         </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">Commits</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-300">Commits</div>
                       </div>
-                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/15">
+                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/20">
                         <div className="text-3xl font-bold text-brand">
                           {project.metrics.pullRequests}
                         </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">Pull Requests</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-300">Pull Requests</div>
                       </div>
-                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/15">
+                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/20">
                         <div className="text-3xl font-bold text-brand">
                           {project.metrics.issues}
                         </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">Issues</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-300">Issues</div>
                       </div>
-                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/15">
+                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/20">
                         <div className="text-3xl font-bold text-brand">
                           {Math.round(project.metrics.timeSpent / 24)}
                         </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                        <div className="text-sm text-gray-600 dark:text-gray-300">
                           {isEnglish ? 'Days Spent' : 'Ngày làm việc'}
                         </div>
                       </div>
@@ -234,7 +315,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
             </div>
 
             {/* Action Buttons */}
-            <div className="p-4 border-t dark:border-gray-700 flex gap-3">
+            <div className="p-4 border-t dark:border-white/10 flex gap-3">
               {project.github && (
                 <a
                   href={project.github}
@@ -257,7 +338,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
               </a>
               <button
                 onClick={shareProject}
-                className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-black/70 hover:bg-gray-200 dark:hover:bg-black/90 transition-colors"
               >
                 <FaShare />
               </button>

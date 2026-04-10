@@ -149,9 +149,9 @@ const SkillCard = ({ item }: { item: SkillItem }) => {
                 <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-1 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                     {item.name}
                 </h4>
-                <div className="text-sm text-cyan-700/80 dark:text-cyan-400/80 font-medium">
+                {/* <div className="text-sm text-cyan-700/80 dark:text-cyan-400/80 font-medium">
                     {item.experience}
-                </div>
+                </div> */}
             </div>
         </div>
         <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 h-10">

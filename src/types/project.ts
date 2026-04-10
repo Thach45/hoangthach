@@ -2,6 +2,7 @@ export interface Project {
   id: string;
   title: string;
   image: string;
+  gallery?: string[];
   description: {
     en: string;
     vi: string;

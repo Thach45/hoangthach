@@ -166,6 +166,8 @@ interface ProjectCardProps {
 function ProjectCard({ project, isEnglish, index, onClick }: ProjectCardProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, margin: "-100px" });
+  const galleryImages = [...(project.gallery ?? []), project.image].slice(0, 3);
+  while (galleryImages.length < 3) galleryImages.push(project.image);
 
   return (
     <motion.div
@@ -186,6 +188,21 @@ function ProjectCard({ project, isEnglish, index, onClick }: ProjectCardProps) {
           fill
           className="object-cover transform group-hover:scale-110 transition duration-500"
         />
+        <div className="absolute bottom-3 right-3 z-10 flex items-center gap-1.5">
+          {galleryImages.map((img, i) => (
+            <div
+              key={`${project.id}-thumb-${i}`}
+              className="relative h-9 w-14 rounded-md overflow-hidden border border-white/60 shadow-md"
+            >
+              <Image
+                src={img}
+                alt={`${project.title} preview ${i + 1}`}
+                fill
+                className="object-cover"
+              />
+            </div>
+          ))}
+        </div>
         <div className="absolute top-4 right-4 z-10">
           <span className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full text-sm font-medium shadow-lg">
             {isEnglish ? project.status.en : project.status.vi}
