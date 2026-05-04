@@ -11,6 +11,7 @@ import PersonalImprints from '@/components/PersonalImprints';
 import Projects from '../components/Projects';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
+import FixedContactBar from '../components/FixedContactBar';
 
 export default function Home() {
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -108,6 +109,7 @@ export default function Home() {
       <Projects />
       <Contact />
       <Footer />
+      <FixedContactBar />
     </Layout>
   );
 }

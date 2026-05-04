@@ -4,6 +4,9 @@ import { useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import Aos from 'aos';
 import { motion } from "framer-motion";
+import dynamic from 'next/dynamic';
+
+const EarthCanvas = dynamic(() => import('./canvas/Earth'), { ssr: false });
 
 const contactInfo = {
   email: {
@@ -57,153 +60,105 @@ export default function Contact() {
         <h2 className="text-4xl font-bold text-center mb-16 gradient-text">
           {isEnglish ? 'Contact' : 'Liên hệ'}
         </h2>
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Contact Information */}
-            <motion.div 
-              className="space-y-6"
-              initial={{ opacity: 0, x: -50 }} 
-              whileInView={{ opacity: 1, x: 0 }}
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* 3D Earth Model */}
+            <motion.div
+              className="xl:h-[550px] md:h-[550px] h-[350px]"
+              initial={{ opacity: 0, scale: 0.5 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <h3 className="text-2xl font-semibold text-gray-800 dark:text-white">
-                {isEnglish ? 'Contact Information' : 'Thông tin liên hệ'}
-              </h3>
-              <div className="space-y-4">
-                {Object.entries(contactInfo).map(([key, info]) => (
-                  <div key={key} className="flex items-start space-x-4">
-                    <svg className="w-6 h-6 text-brand mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      {key === 'email' && (
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      )}
-                      {key === 'phone' && (
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      )}
-                      {key === 'address' && (
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      )}
-                    </svg>
-                    <div>
-                      <h4 className="font-medium text-gray-800 dark:text-white">
-                        {info.label[isEnglish ? 'en' : 'vi']}
-                      </h4>
-                      <p className="text-gray-600 dark:text-gray-300">
-                        {typeof info.value === 'string' ? info.value : info.value[isEnglish ? 'en' : 'vi']}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <h3 className="text-2xl font-semibold text-gray-800 dark:text-white">
-                {isEnglish ? 'Social Links' : 'Liên kết mạng xã hội'}
-              </h3>
+              <EarthCanvas />
+            </motion.div>
+
+            <div className="relative">
+              {/* Contact Form */}
               <motion.div
-                className="flex space-x-4"
-                initial={{ opacity: 0, x: -50 }}
+                className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border border-gray-100 dark:border-gray-800 max-w-xl mx-auto lg:mx-0"
+                initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
-                {/* Social Links */}
-                {socialLinks.map((social, index) => (
-                  <a
-                    key={index}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-brand transition-colors"
-                  >
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                      {social.icon}
-                    </svg>
-                  </a>
-                ))}
-              </motion.div>
-            </motion.div>
-
-            {/* Contact Form */}
-            <motion.div
-              className="bg-white dark:bg-gray-900 rounded-xl p-8 glass-morphism"
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <form className="space-y-6" action="https://formspree.io/f/xdkorozk" method="POST">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form className="space-y-6" action="https://formspree.io/f/xdkorozk" method="POST">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        {isEnglish ? 'Name' : 'Họ và tên'}
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-brand focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                        placeholder={isEnglish ? 'John Doe' : 'Nguyen Van A'}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-brand focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                        placeholder="email@example.com"
+                        required
+                      />
+                    </div>
+                  </div>
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {isEnglish ? 'Name' : 'Họ và tên'}
+                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {isEnglish ? 'Subject' : 'Tiêu đề'}
                     </label>
                     <input
                       type="text"
-                      id="name"
-                      name="name"
+                      id="subject"
+                      name="subject"
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-brand focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                      placeholder={isEnglish ? 'John Doe' : 'Nguyen Van A'}
+                      placeholder="..."
                       required
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Email
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {isEnglish ? 'Message' : 'Nội dung'}
                     </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-brand focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                      placeholder="email@example.com"
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={4}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-brand focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none"
+                      placeholder="..."
                       required
-                    />
+                    ></textarea>
                   </div>
-                </div>
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {isEnglish ? 'Subject' : 'Tiêu đề'}
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-brand focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                    placeholder="..."
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {isEnglish ? 'Message' : 'Nội dung'}
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-brand focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none"
-                    placeholder="..."
-                    required
-                  ></textarea>
-                </div>
-                <motion.div
-                  
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: false, amount: 0.2 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                >
-                  <button
-                    type="submit"
-                    className="w-full bg-brand text-white px-6 py-3 rounded-lg hover:brightness-110 transition-all flex items-center justify-center space-x-2"
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.2 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
                   >
-                    <span>{isEnglish ? 'Send Message' : 'Gửi tin nhắn'}</span>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </button>
-                </motion.div>
-              </form>
-            </motion.div>
+                    <button
+                      type="submit"
+                      className="w-full bg-brand text-white px-6 py-3 rounded-lg hover:brightness-110 transition-all flex items-center justify-center space-x-2"
+                    >
+                      <span>{isEnglish ? 'Send Message' : 'Gửi tin nhắn'}</span>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </button>
+                  </motion.div>
+                </form>
+              </motion.div>
+
+            </div>
+
+          
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react';
 import { Play, Pause } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
+import dynamic from 'next/dynamic';
 
 interface SkillItem {
   name: string;
@@ -204,7 +205,6 @@ export default function Skills() {
         <div className="container mx-auto px-6">
           <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <h2 className="text-4xl font-bold text-center mb-4 gradient-text">{isEnglish ? 'My Tech Stack' : 'Kỹ năng'}</h2>
-            
           </motion.div>
           
           <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
@@ -231,7 +231,7 @@ export default function Skills() {
                       <StaticSkillGrid key="grid" items={activeCategory.items} />
                   ) : (
                       <motion.div key="slider" exit={{ opacity: 0, y: -20 }}>
-                         <SkillSlider items={activeCategory.items} speed={`${activeCategory.items.length * 3}s`} />
+                         <SkillSlider items={activeCategory.items}  />
                       </motion.div>
                   )}
               </AnimatePresence>

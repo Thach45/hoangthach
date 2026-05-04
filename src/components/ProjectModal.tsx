@@ -21,7 +21,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'challenges' | 'metrics'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'challenges'>('overview');
   const videoRef = useRef<HTMLVideoElement>(null);
   const galleryImages = useMemo(() => {
     const images = [project.image, ...(project.gallery ?? [])].filter(Boolean);
@@ -204,10 +204,6 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                 tab="challenges" 
                 label={isEnglish ? "Challenges" : "Thách thức"} 
               />
-              <TabButton 
-                tab="metrics" 
-                label={isEnglish ? "Metrics" : "Chỉ số"} 
-              />
             </div>
 
             {/* Content */}
@@ -280,36 +276,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                     </div>
                   )}
 
-                  {activeTab === 'metrics' && (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/20">
-                        <div className="text-3xl font-bold text-brand">
-                          {project.metrics.commits}
-                        </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-300">Commits</div>
-                      </div>
-                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/20">
-                        <div className="text-3xl font-bold text-brand">
-                          {project.metrics.pullRequests}
-                        </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-300">Pull Requests</div>
-                      </div>
-                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/20">
-                        <div className="text-3xl font-bold text-brand">
-                          {project.metrics.issues}
-                        </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-300">Issues</div>
-                      </div>
-                      <div className="p-6 rounded-lg bg-brand/10 dark:bg-brand/20">
-                        <div className="text-3xl font-bold text-brand">
-                          {Math.round(project.metrics.timeSpent / 24)}
-                        </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-300">
-                          {isEnglish ? 'Days Spent' : 'Ngày làm việc'}
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  
                 </motion.div>
               </AnimatePresence>
             </div>

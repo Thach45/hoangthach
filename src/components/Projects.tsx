@@ -166,8 +166,6 @@ interface ProjectCardProps {
 function ProjectCard({ project, isEnglish, index, onClick }: ProjectCardProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, margin: "-100px" });
-  const galleryImages = [...(project.gallery ?? []), project.image].slice(0, 3);
-  while (galleryImages.length < 3) galleryImages.push(project.image);
 
   return (
     <motion.div
@@ -177,141 +175,79 @@ function ProjectCard({ project, isEnglish, index, onClick }: ProjectCardProps) {
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="bg-white dark:bg-gray-900 rounded-xl overflow-hidden card-hover cursor-pointer group"
+      className="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer group border border-gray-100 dark:border-gray-800"
       onClick={onClick}
-      whileHover={{ y: -10 }}
     >
-      <div className="relative overflow-hidden aspect-video">
+      <div className="relative overflow-hidden aspect-[16/10]">
         <Image
           src={project.image}
           alt={project.title}
           fill
-          className="object-cover transform group-hover:scale-110 transition duration-500"
+          className="object-cover transform group-hover:scale-105 transition duration-700"
         />
-        <div className="absolute bottom-3 right-3 z-10 flex items-center gap-1.5">
-          {galleryImages.map((img, i) => (
-            <div
-              key={`${project.id}-thumb-${i}`}
-              className="relative h-9 w-14 rounded-md overflow-hidden border border-white/60 shadow-md"
-            >
-              <Image
-                src={img}
-                alt={`${project.title} preview ${i + 1}`}
-                fill
-                className="object-cover"
-              />
+        
+        <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-all duration-500">
+          <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md shadow-lg ${project.endDate ? 'bg-green-500' : 'bg-yellow-500'}`}>
+            <span className="w-1 h-1 rounded-full bg-white animate-pulse" />
+            <span className="text-[9px] font-bold text-white tracking-wider uppercase ">
+              {isEnglish ? project.status.en : project.status.vi}
+            </span>
+          </div>
+        </div>
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500">
+          <div className="absolute bottom-6 left-6 right-6">
+            <h3 className="text-white text-2xl font-bold mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{project.title}</h3>
+            <div className="flex flex-wrap gap-2 transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500 delay-75">
+              {project.tech.slice(0, 3).map((t, i) => (
+                <span key={i} className="text-xs text-brandCyan font-medium">#{t}</span>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="absolute top-4 right-4 z-10">
-          <span className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full text-sm font-medium shadow-lg">
-            {isEnglish ? project.status.en : project.status.vi}
-          </span>
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-0 group-hover:opacity-70 transition-opacity">
-          <div className="absolute bottom-4 left-4">
-          
-            <h3 className="text-white text-xl font-bold">{project.title}</h3>
-            <p className="text-gray-300">{project.techStack}</p>
           </div>
         </div>
       </div>
 
       <div className="p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 leading-snug line-clamp-2">
-          {project.title}
-        </h3>
+        <div className="flex justify-between items-start mb-3">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-brand transition-colors duration-300">
+            {project.title}
+          </h3>
+        </div>
        
-        <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+        <p className="text-gray-600 dark:text-gray-400 mb-6 line-clamp-2 text-sm leading-relaxed">
           {isEnglish ? project.description.en : project.description.vi}
         </p>
 
-        <div className="flex flex-wrap gap-2 mb-4">
-          {project.tech.map((tech: string, techIndex: number) => (
-            <motion.span
-              key={techIndex}
-              className="px-3 py-1 rounded-full text-sm font-medium border border-brandCyan/20 hover:border-brandCyan/40 bg-brand/10 text-brand dark:text-brand"
-              whileHover={{ scale: 1.1 }}
-            >
-              {tech}
-            </motion.span>
-          ))}
-        </div>
-
-        {/* Project Progress */}
-        <ProjectProgress project={project} className="mb-4" />
-
-        {/* Project Metrics */}
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          <div className="text-center p-2 rounded-lg bg-brand/10">
-            <div className="text-sm font-semibold text-brand dark:text-brand">
-              {project.metrics.commits}
-            </div>
-            <div className="text-xs text-gray-500">Commits</div>
-          </div>
-          <div className="text-center p-2 rounded-lg bg-brand/10">
-            <div className="text-sm font-semibold text-brand dark:text-brand">
-              {project.metrics.pullRequests}
-            </div>
-            <div className="text-xs text-gray-500">PRs</div>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between pt-4 border-t border-gray-50 dark:border-gray-800">
+          <div className="flex items-center gap-4">
             {project.github && (
               <a
                 href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                className="text-gray-400 hover:text-brand transition-colors duration-300"
               >
-                <motion.span whileHover={{ scale: 1.1 }}>
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </motion.span>
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path fillRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z" clipRule="evenodd" />
+                </svg>
               </a>
             )}
             {project.demoVideo && (
-              <motion.span
-                whileHover={{ scale: 1.1 }}
-                className="text-brand"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
+              <span className="text-gray-400 hover:text-brand transition-colors duration-300">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-              </motion.span>
+              </span>
             )}
           </div>
 
-          <div className="text-brand hover:opacity-90 font-medium">
-            {isEnglish ? 'View Details →' : 'Xem chi tiết →'}
+          <div className="flex items-center text-brand font-bold text-sm tracking-wide">
+            {isEnglish ? 'DETAILS' : 'CHI TIẾT'}
+            <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
           </div>
         </div>
       </div>
