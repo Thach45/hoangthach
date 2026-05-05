@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
+import { CHAT_SYSTEM_PROMPT } from '@/data/data';
 import { useLanguage } from '@/context/LanguageContext';
-import { personalInfo, CHAT_SYSTEM_PROMPT } from '@/data/data';
 
 import StarsCanvas from '@/components/canvas/Stars';
 

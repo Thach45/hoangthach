@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useLanguage } from '../context/LanguageContext';
 
 import { personalInfo } from '../data/data';
 
@@ -36,7 +35,6 @@ const socialLinks = [
 
 
 export default function FixedContactBar() {
-  const { isEnglish } = useLanguage();
 
   return (
     <motion.div 

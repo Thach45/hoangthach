@@ -4,6 +4,8 @@ import { Metadata } from 'next'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import { siteConfig } from '@/config'
 import Providers from '@/providers/Providers'
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -76,6 +78,8 @@ export default function RootLayout({
         <ErrorBoundary>
           <Providers>
             {children}
+            <Analytics />
+            <SpeedInsights />
           </Providers>
         </ErrorBoundary>
         

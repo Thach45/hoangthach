@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react';
 import { Play, Pause } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
-import dynamic from 'next/dynamic';
+import Image from 'next/image';
 
 interface SkillItem {
   name: string;
@@ -16,11 +16,6 @@ interface SkillItem {
     en: string;
     vi: string;
   };
-}
-
-interface SkillCategory {
-  title: string;
-  items: SkillItem[];
 }
 
 import { skills } from '@/data/data';
@@ -44,17 +39,21 @@ const Hexagon = ({ item }: { item: SkillItem }) => (
           style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}
         />
         <div className="relative z-10 text-center flex flex-col items-center justify-center p-2 transition-opacity duration-300 group-hover:opacity-0">
-          <img 
+          <Image 
             src={item.icon} 
             alt={item.name} 
+            width={48}
+            height={48}
             className="h-12 w-12 object-contain"
             style={item.invert ? { filter: 'invert(1)' } : {}}
           />
         </div>
         <div className="absolute z-10 text-center flex flex-col items-center justify-center p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-           <img 
+           <Image 
               src={item.icon} 
               alt={item.name} 
+              width={32}
+              height={32}
               className="h-8 w-8 object-contain mb-1"
               style={item.invert ? { filter: 'invert(1)' } : {}}
             />
@@ -101,9 +100,11 @@ const SkillCard = ({ item }: { item: SkillItem }) => {
     >
         <div className="flex items-start gap-4 mb-4">
             <div className="w-12 h-12 relative flex-shrink-0 mt-1">
-                <img
+                <Image
                     src={item.icon}
                     alt={item.name}
+                    width={48}
+                    height={48}
                     className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
                     style={item.invert ? { filter: 'invert(1)' } : {}}
                 />
