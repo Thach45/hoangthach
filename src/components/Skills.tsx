@@ -23,48 +23,10 @@ interface SkillCategory {
   items: SkillItem[];
 }
 
-// 1. DỮ LIỆU ĐƯỢC BỔ SUNG ĐẦY ĐỦ THÔNG TIN CHO CHẾ ĐỘ XEM LƯỚI
-const skillCategories = [
-  {
-    title: 'Frontend',
-    items: [
-      { name: 'React', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg', tags: ['Hooks', 'State Management', 'Redux'], experience: '3+ Years', description: { en: 'Building complex user interfaces and state management.', vi: 'Xây dựng UI phức tạp và quản lý state hiệu quả.' } },
-      { name: 'Next.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg', invert: true, tags: ['SSR', 'SSG', 'API Routes'], experience: '2+ Years', description: { en: 'Server-side rendering and static site generation.', vi: 'SSR/SSG để tối ưu SEO và hiệu năng.' } },
-      { name: 'JavaScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg', tags: ['ES6+', 'DOM', 'Async/Await'], experience: '4+ Years', description: { en: 'Core language for web interactivity and logic.', vi: 'Ngôn ngữ cốt lõi cho logic và tương tác web.' } },
-      { name: 'TypeScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg', tags: ['Type Safety', 'Interfaces', 'Generics'], experience: '2+ Years', description: { en: 'Enhancing code quality with static typing.', vi: 'Tăng chất lượng code nhờ type an toàn và rõ ràng.' } },
-      { name: 'Tailwind CSS', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg', tags: ['Utility-First', 'JIT', 'Responsive'], experience: '3+ Years', description: { en: 'Rapidly styling modern and responsive designs.', vi: 'Style nhanh, hiện đại và responsive theo utility-first.' } },
-      { name: 'Framer Motion', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/framermotion/framermotion-original.svg', tags: ['Animations', 'Gestures', 'Layout'], experience: '1+ Year', description: { en: 'Creating fluid and delightful animations.', vi: 'Tạo animation mượt mà, tương tác tự nhiên.' } },
-    ],
-  },
-  {
-    title: 'Backend',
-    items: [
-      { name: 'Node.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original-wordmark.svg', tags: ['Runtime', 'NPM', 'Async'], experience: '3+ Years', description: { en: 'Building fast and scalable server-side applications.', vi: 'Xây dựng backend nhanh, dễ mở rộng.' } },
-      { name: 'Express', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg', invert: true, tags: ['REST API', 'Middleware', 'Routing'], experience: '3+ Years', description: { en: 'Creating robust APIs and web servers.', vi: 'Thiết kế REST API và web server ổn định.' } },
-      { name: 'Python', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg', tags: ['Scripting', 'Automation', 'Data'], experience: '2+ Years', description: { en: 'Versatile language for scripting and backend logic.', vi: 'Ngôn ngữ linh hoạt cho script, automation và backend.' } },
-      { name: 'Flask', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flask/flask-original.svg', invert: true, tags: ['Microframework', 'Jinja2', 'APIs'], experience: '1+ Year', description: { en: 'Lightweight framework for building web services.', vi: 'Framework nhẹ để build web service nhanh.' } },
-    ],
-  },
-  {
-    title: 'Databases',
-    items: [
-        { name: 'MongoDB', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg', tags: ['NoSQL', 'Mongoose', 'Aggregation'], experience: '2+ Years', description: { en: 'Flexible NoSQL database for modern applications.', vi: 'CSDL NoSQL linh hoạt cho ứng dụng hiện đại.' } },
-        { name: 'MySQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg', tags: ['Relational', 'SQL', 'Schema'], experience: '3+ Years', description: { en: 'Reliable relational database management.', vi: 'CSDL quan hệ ổn định, dễ vận hành.' } },
-        { name: 'PostgreSQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg', tags: ['SQL', 'Transactions', 'ACID'], experience: '2+ Years', description: { en: 'Powerful, open-source object-relational database.', vi: 'CSDL mạnh mẽ, hỗ trợ ACID và giao dịch tốt.' } },
-        { name: 'Firebase', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-plain.svg', tags: ['Firestore', 'Auth', 'Realtime'], experience: '2+ Years', description: { en: 'Backend-as-a-Service platform by Google.', vi: 'BaaS của Google: Auth, Firestore và realtime.' } },
-    ]
-  },
-  {
-    title: 'Tools',
-    items: [
-      { name: 'Git', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg', tags: ['Version Control', 'Branching', 'Merge'], experience: '4+ Years', description: { en: 'Essential version control system for tracking changes.', vi: 'Quản lý phiên bản, branch/merge và theo dõi thay đổi.' } },
-      { name: 'GitHub', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg', invert: true, tags: ['CI/CD', 'Pull Requests', 'Actions'], experience: '4+ Years', description: { en: 'Platform for hosting and collaborating on Git repositories.', vi: 'Nền tảng lưu trữ code và cộng tác theo workflow.' } },
-      { name: 'Docker', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg', tags: ['Containers', 'Compose', 'DevOps'], experience: '2+ Years', description: { en: 'Containerizing applications for consistency across environments.', vi: 'Đóng gói app bằng container để đồng nhất môi trường.' } },
-      { name: 'Vite', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg', tags: ['Build Tool', 'HMR', 'ESM'], experience: '1+ Year', description: { en: 'Next-generation frontend tooling with a fast dev server.', vi: 'Tooling frontend nhanh với dev server và HMR.' } },
-      { name: 'Figma', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg', tags: ['UI/UX Design', 'Prototyping', 'Collaboration'], experience: '3+ Years', description: { en: 'Collaborative interface design tool for teams.', vi: 'Thiết kế UI/UX, prototype và cộng tác theo team.' } },
-    ],
-  },
-];
+import { skills } from '@/data/data';
+
+const skillCategories = skills.categories;
+
 
 const allSkillsCategory = {
   title: 'All',

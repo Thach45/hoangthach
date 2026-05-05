@@ -1,6 +1,6 @@
 'use client';
 
-import { personalImprints } from '@/data/imprints';
+import { personalImprints } from '@/data/data';
 import { useLanguage } from '@/context/LanguageContext';
 import { Imprint } from '@/types/imprint';
 import { motion, useInView } from 'framer-motion';

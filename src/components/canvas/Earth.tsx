@@ -11,10 +11,15 @@ const Earth = () => {
 
   return (
     <mesh>
-      <ambientLight intensity={0.8} />
-      <hemisphereLight intensity={0.3} groundColor='black' />
-      <pointLight intensity={1.2} position={[5, 5, 5]} />
-      <primitive object={earth.scene} scale={2.5} position-y={0} rotation-y={0} />
+      <ambientLight intensity={1.5} />
+      <directionalLight intensity={2} position={[5, 5, 5]} />
+      <pointLight intensity={3} position={[-5, -5, -5]} color="#4287f5" />
+      <primitive 
+        object={earth.scene} 
+        scale={2.8} 
+        position-y={0} 
+        rotation-y={0} 
+      />
     </mesh>
   );
 };
@@ -23,9 +28,9 @@ const EarthCanvas = () => {
   return (
     <Canvas
       shadows
-      frameloop='demand'
+      frameloop='always'
       dpr={[1, 2]}
-      gl={{ preserveDrawingBuffer: true }}
+      gl={{ antialias: true, preserveDrawingBuffer: true }}
       camera={{
         fov: 45,
         near: 0.1,
@@ -36,7 +41,9 @@ const EarthCanvas = () => {
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls
           autoRotate
+          autoRotateSpeed={1.5}
           enableZoom={false}
+          enablePan={false}
           maxPolarAngle={Math.PI / 2}
           minPolarAngle={Math.PI / 2}
         />

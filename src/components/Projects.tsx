@@ -7,7 +7,7 @@ import ProjectFilter from './ProjectFilter';
 import ProjectModal from './ProjectModal';
 import ProjectSkeleton from './ProjectSkeleton';
 import ProjectProgress from './ProjectProgress';
-import { projects } from '@/data/projects';
+import { projects } from '@/data/data';
 import { Project } from '@/types/project';
 import Image from 'next/image';
 

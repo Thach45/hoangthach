@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import { useDarkMode } from '../context/DarkModeContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { navItems, personalInfo } from '../data/data';
 
 export default function Navigation() {
   const { isEnglish, toggleLanguage } = useLanguage();
@@ -12,14 +13,6 @@ export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const navItems = [
-    { href: '#home', vi: 'Trang chủ', en: 'Home' },
-    { href: '#about', vi: 'Giới thiệu', en: 'About' },
-    { href: '#skills', vi: 'Kỹ năng', en: 'Skills' },
-    { href: '#imprints', vi: 'Dấu ấn', en: 'Imprints' },
-    { href: '#projects', vi: 'Dự án', en: 'Projects' },
-    { href: '#contact', vi: 'Liên hệ', en: 'Contact' },
-  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,7 +35,7 @@ export default function Navigation() {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link href="#" className="text-2xl font-bold gradient-text">
-            Hoang Thach
+            {personalInfo.name.en}
           </Link>
 
           {/* Desktop Navigation */}

@@ -5,38 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import Image from 'next/image';
 
-const skills = [
-  {
-    name: 'Web Development',
-    icon: '/asset/globe.svg',
-    description: {
-      en: 'Building modern web applications with cutting-edge technologies',
-      vi: 'Xây dựng ứng dụng web hiện đại với công nghệ tiên tiến'
-    },
-    techs: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
-    color: '#38BDF8'
-  },
-  {
-    name: 'Backend Development',
-    icon: '/asset/window.svg',
-    description: {
-      en: 'Creating robust and scalable server-side solutions',
-      vi: 'Tạo giải pháp server mạnh mẽ và có khả năng mở rộng'
-    },
-    techs: ['Node.js', 'Express', 'Python', 'Flask'],
-    color: '#22C55E'
-  },
-  {
-    name: 'Database Management',
-    icon: '/asset/file.svg',
-    description: {
-      en: 'Designing and optimizing database structures',
-      vi: 'Thiết kế và tối ưu hóa cấu trúc cơ sở dữ liệu'
-    },
-    techs: ['MongoDB', 'MySQL', 'Redis', 'PostgreSQL'],
-    color: '#F59E0B'
-  }
-];
+import { skills as dataSkills } from '../data/data';
+
+const skills = dataSkills.slider;
+
 
 export default function SkillsSlider() {
   const [currentSlide, setCurrentSlide] = useState(0);

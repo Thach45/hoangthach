@@ -13,6 +13,9 @@ import Contact from '../components/Contact';
 import Footer from '../components/Footer';
 import FixedContactBar from '../components/FixedContactBar';
 
+import { AnimatePresence } from 'framer-motion';
+import ScrollSection from '../components/ScrollSection';
+
 export default function Home() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const tickingRef = useRef(false);
@@ -63,53 +66,71 @@ export default function Home() {
   return (
     <Layout>
       <Navigation />
-      <div className="parallax-container">
-        <div className="absolute inset-0" ref={planetsRef} style={reducedMotion ? { transform: 'none' } : undefined}>
-          <Image
-            src="/asset/planets.png"
-            alt="planets"
-            fill
-            sizes="100vw"
-            className="plants object-cover"
-            priority
-          />
+      <AnimatePresence>
+        <div className="parallax-container">
+          <div className="absolute inset-0" ref={planetsRef} style={reducedMotion ? { transform: 'none' } : undefined}>
+            <Image
+              src="/asset/planets.png"
+              alt="planets"
+              fill
+              sizes="100vw"
+              className="plants object-cover"
+              priority
+            />
+          </div>
+          <div className="absolute inset-0" ref={starsRef} style={reducedMotion ? { transform: 'none' } : undefined}>
+            <Image
+              src="/asset/stars.png"
+              alt="stars"
+              fill
+              sizes="100vw"
+              className="stars object-cover"
+            />
+          </div>
+          <div className="absolute inset-0" ref={mountainsRef} style={reducedMotion ? { transform: 'none' } : undefined}>
+            <Image
+              src="/asset/mountains.png"
+              alt="mountains"
+              fill
+              sizes="100vw"
+              className="mountains object-cover"
+            />
+          </div>
+          <div className="absolute w-[80px] sm:w-[100px] z-20 h-[80px] sm:h-[100px] left-0 top-[20%] hidden md:block" ref={rocketRef} style={reducedMotion ? { transform: 'none' } : undefined}>
+            <Image
+              src="/asset/rocket.png"
+              alt="rocket"
+              fill
+              sizes="100vw"
+              className="rocket object-cover"
+            />
+          </div>
+          <Hero />
         </div>
-        <div className="absolute inset-0" ref={starsRef} style={reducedMotion ? { transform: 'none' } : undefined}>
-          <Image
-            src="/asset/stars.png"
-            alt="stars"
-            fill
-            sizes="100vw"
-            className="stars object-cover"
-          />
-        </div>
-        <div className="absolute inset-0" ref={mountainsRef} style={reducedMotion ? { transform: 'none' } : undefined}>
-          <Image
-            src="/asset/mountains.png"
-            alt="mountains"
-            fill
-            sizes="100vw"
-            className="mountains object-cover"
-          />
-        </div>
-        <div className="absolute w-[100px] z-20  h-[100px] left-0 top-[20%]" ref={rocketRef} style={reducedMotion ? { transform: 'none' } : undefined}>
-          <Image
-            src="/asset/rocket.png"
-            alt="rocket"
-            fill
-            sizes="100vw"
-            className="rocket object-cover"
-          />
-        </div>
-        <Hero />
-      </div>
-      <About />
-      <Skills />
-      <PersonalImprints variant="preview" />
-      <Projects />
-      <Contact />
-      <Footer />
-      <FixedContactBar />
+
+        <ScrollSection>
+          <About />
+        </ScrollSection>
+
+        <ScrollSection>
+          <Skills />
+        </ScrollSection>
+
+        <ScrollSection>
+          <PersonalImprints variant="preview" />
+        </ScrollSection>
+
+        <ScrollSection>
+          <Projects />
+        </ScrollSection>
+
+        <ScrollSection>
+          <Contact />
+        </ScrollSection>
+
+        <Footer />
+        <FixedContactBar />
+      </AnimatePresence>
     </Layout>
   );
 }
