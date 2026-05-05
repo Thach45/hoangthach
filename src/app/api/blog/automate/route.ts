@@ -3,6 +3,8 @@ import { generateBlogContent } from "@/lib/gemini";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
+export const maxDuration = 60;
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
