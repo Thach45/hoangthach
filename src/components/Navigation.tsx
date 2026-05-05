@@ -41,7 +41,11 @@ export default function Navigation() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8 items-center">
             {navItems.map((item, index) => (
-              <Link key={index} href={item.href} className="text-gray-800 dark:text-white hover:text-brand transition-colors">
+              <Link 
+                key={index} 
+                href={item.href.startsWith('#') ? `/${item.href}` : item.href} 
+                className="text-gray-800 dark:text-white hover:text-brand transition-colors"
+              >
                 {isEnglish ? item.en : item.vi}
               </Link>
             ))}
@@ -115,7 +119,7 @@ export default function Navigation() {
               {navItems.map((item, index) => (
                 <Link
                   key={index}
-                  href={item.href}
+                  href={item.href.startsWith('#') ? `/${item.href}` : item.href}
                   className="block text-gray-800 dark:text-white hover:text-brand transition-colors py-2"
                   onClick={closeMenu}
                 >

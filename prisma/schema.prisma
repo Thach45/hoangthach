@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  slug      String   @unique
+  category  String
+  date      String   
+  readTime  String
+  likes     Int      @default(0)
+  image     String
+  
+  title     LocalizedString
+  excerpt   LocalizedString
+
+  // Enforce a list of Section types
+  content   Section[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("posts")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String   // Hashed password
+  name      String?
+  role      String   @default("ADMIN")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// Define reusable multi-language type
+type LocalizedString {
+  en String
+  vi String
+}
+
+// Define the structure for each content block
+type Section {
+  type    String   // heading, paragraph, image, list-box, quote
+  data    LocalizedString?
+  level   Int?     // For headings
+  src     String?  // For images
+  caption LocalizedString?
+  items   LocalizedString[] // For list-box
+  title   LocalizedString?  // For list-box title
+  code    String?           // For code-block
+  language String?          // For code-block (js, ts, python, etc.)
+}

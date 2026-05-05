@@ -4,7 +4,9 @@ const nextConfig = {
     domains: [
       'upload.wikimedia.org',
       'www.svgrepo.com',
-      'res.cloudinary.com'
+      'res.cloudinary.com',
+      'images.unsplash.com',
+      "cdn2.fptshop.com.vn"
     ],
   },
   // Allow importing SVG files

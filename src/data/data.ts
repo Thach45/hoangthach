@@ -34,10 +34,10 @@ export const personalInfo = {
 };
 
 export const siteConfig = {
-  name: 'Hoang Thach Portfolio',
-  description: 'Backend Developer Portfolio of Nguyen Hoang Thach',
+  name: 'Nguyen Hoang Thach | Backend Developer & AI Enthusiast',
+  description: 'Portfolio của Nguyễn Hoàng Thạch - Sinh viên CNTT tại HCMUTE, chuyên gia lập trình Backend (Next.js, Node.js) và đam mê AI. Khám phá các dự án sáng tạo và trải nghiệm tương tác 3D độc đáo.',
   url: 'https://hoangthach.vercel.app',
-  ogImage: '/asset/og.jpg',
+  ogImage: '/asset/anh2.png',
 };
 
 export const navItems = [
@@ -46,6 +46,7 @@ export const navItems = [
   { href: '#skills', vi: 'Kỹ năng', en: 'Skills' },
   { href: '#imprints', vi: 'Dấu ấn', en: 'Imprints' },
   { href: '#projects', vi: 'Dự án', en: 'Projects' },
+  { href: '/blog', vi: 'Blog', en: 'Blog' },
   { href: '/talk-with-me', vi: 'Trò chuyện', en: 'Talk With Me' },
   { href: '#contact', vi: 'Liên hệ', en: 'Contact' },
 ];
@@ -333,3 +334,53 @@ Rules:
 4. Keep responses concise but helpful
 5. Never say you are an AI or language model - you are Thach
 6. Use occasional emoji to be friendly 😊`;
+export const blogPosts = [
+  {
+    id: '1',
+    slug: 'lo-trinh-tro-thanh-backend-developer-2024',
+    title: {
+      vi: 'Lộ trình trở thành Backend Developer năm 2024',
+      en: 'Backend Developer Roadmap for 2024',
+    },
+    excerpt: {
+      vi: 'Những kỹ năng và công nghệ quan trọng nhất bạn cần nắm vững để chinh phục vị trí Backend Developer.',
+      en: 'The most important skills and technologies you need to master to conquer the Backend Developer position.',
+    },
+    date: '2024-05-01',
+    category: 'Backend',
+    readTime: '8 min',
+    image: '/asset/e-commerce.png',
+  },
+  {
+    id: '2',
+    slug: 'ung-dung-ai-vao-du-an-thuc-te',
+    title: {
+      vi: 'Ứng dụng AI vào dự án thực tế: Từ ý tưởng đến triển khai',
+      en: 'Applying AI to Real Projects: From Idea to Implementation',
+    },
+    excerpt: {
+      vi: 'Cách mình đã tích hợp Llama 3 vào dự án Portfolio này và những bài học kinh nghiệm rút ra.',
+      en: 'How I integrated Llama 3 into this Portfolio project and the lessons learned.',
+    },
+    date: '2024-04-20',
+    category: 'AI',
+    readTime: '5 min',
+    image: '/asset/finace-manager.png',
+  },
+  {
+    id: '3',
+    slug: 'toi-uu-hieu-nang-nextjs-voi-threejs',
+    title: {
+      vi: 'Tối ưu hiệu năng Next.js khi sử dụng Three.js',
+      en: 'Optimizing Next.js Performance with Three.js',
+    },
+    excerpt: {
+      vi: 'Mẹo để giữ cho website của bạn vẫn mượt mà khi gánh những model 3D phức tạp.',
+      en: 'Tips to keep your website smooth while handling complex 3D models.',
+    },
+    date: '2024-04-15',
+    category: 'Optimization',
+    readTime: '10 min',
+    image: '/asset/og.png',
+  },
+];
