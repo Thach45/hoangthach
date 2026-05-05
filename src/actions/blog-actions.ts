@@ -38,8 +38,41 @@ export async function deletePost(id: string) {
   }
 }
 
-export async function getPosts() {
-  return await prisma.post.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+export async function getPosts(page = 1, limit = 7, category = 'All', search = '') {
+  try {
+    const skip = (page - 1) * limit;
+    
+    // Build filter query
+    const where: any = {};
+    if (category !== 'All') {
+      where.category = category;
+    }
+    if (search) {
+      where.OR = [
+        { title: { en: { contains: search, mode: 'insensitive' } } },
+        { title: { vi: { contains: search, mode: 'insensitive' } } },
+        { excerpt: { en: { contains: search, mode: 'insensitive' } } },
+        { excerpt: { vi: { contains: search, mode: 'insensitive' } } },
+      ];
+    }
+
+    const [posts, total] = await Promise.all([
+      prisma.post.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.post.count({ where })
+    ]);
+
+    return {
+      posts: JSON.parse(JSON.stringify(posts)),
+      total,
+      totalPages: Math.ceil(total / limit)
+    };
+  } catch (error) {
+    console.error("Get posts error:", error);
+    return { posts: [], total: 0, totalPages: 0 };
+  }
 }

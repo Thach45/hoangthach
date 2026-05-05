@@ -14,24 +14,26 @@ export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [posts, setPosts] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const categories = ['All', 'Technology', 'Backend', 'AI & ML', 'DevOps', 'System Design', 'Database', 'UI/UX', 'Career', 'Vibe Code', 'News'];
 
   useEffect(() => {
-    getPosts().then(dbPosts => {
-      if (dbPosts) setPosts(dbPosts);
-    });
-  }, []);
+    const loadPosts = async () => {
+      setIsLoading(true);
+      const result = await getPosts(currentPage, 7, activeCategory, searchQuery);
+      setPosts(result.posts);
+      setTotalPages(result.totalPages);
+      setIsLoading(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    loadPosts();
+  }, [currentPage, activeCategory, searchQuery]);
 
-  const categories = useMemo(() => ['All', ...Array.from(new Set(posts.map(post => post.category)))], [posts]);
-
-  const filteredPosts = posts.filter(post => {
-    const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
-    const title = isEnglish ? post.title.en : post.title.vi;
-    const matchesSearch = title.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
-
-  const featuredPost = filteredPosts[0];
-  const gridPosts = filteredPosts.slice(1);
+  const featuredPost = posts[0];
+  const gridPosts = posts.slice(1);
 
   return (
     <main className="pt-32 pb-32 max-w-screen-xl mx-auto px-6 relative z-10">
@@ -80,7 +82,10 @@ export default function BlogPage() {
             {categories.map((category) => (
               <button
                 key={category}
-                onClick={() => setActiveCategory(category)}
+                onClick={() => {
+                  setActiveCategory(category);
+                  setCurrentPage(1);
+                }}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                   activeCategory === category 
                     ? 'bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 shadow-xl shadow-zinc-900/10 dark:shadow-zinc-50/5' 
@@ -99,14 +104,19 @@ export default function BlogPage() {
               type="text" 
               placeholder={isEnglish ? "Search articles..." : "Tìm bài viết..."}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
               className="w-full pl-11 pr-4 py-2.5 bg-zinc-100/50 dark:bg-white/5 border border-transparent dark:border-zinc-800 rounded-full focus:outline-none focus:bg-white dark:focus:bg-zinc-900 focus:border-zinc-300 dark:focus:border-zinc-700 focus:ring-4 focus:ring-zinc-100 dark:focus:ring-white/5 transition-all text-sm placeholder:text-zinc-400"
             />
           </div>
         </motion.div>
 
         {/* Content Area */}
-        {filteredPosts.length > 0 ? (
+        {isLoading ? (
+          <div className="py-20 text-center text-zinc-500">Loading posts...</div>
+        ) : posts.length > 0 ? (
           <div className="space-y-24">
             
             {/* Featured Post */}
@@ -186,6 +196,40 @@ export default function BlogPage() {
                     </Link>
                   ))}
                 </AnimatePresence>
+              </div>
+            )}
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-4 pt-12 border-t border-zinc-100 dark:border-zinc-800">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(prev => prev - 1)}
+                  className="px-6 py-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-sm font-bold disabled:opacity-30 hover:bg-zinc-100 dark:hover:bg-white/5 transition-all"
+                >
+                  {isEnglish ? 'Previous' : 'Trước'}
+                </button>
+                <div className="flex gap-2">
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPage(i + 1)}
+                      className={`w-10 h-10 rounded-full text-sm font-bold transition-all ${
+                        currentPage === i + 1 
+                          ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900' 
+                          : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(prev => prev + 1)}
+                  className="px-6 py-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-sm font-bold disabled:opacity-30 hover:bg-zinc-100 dark:hover:bg-white/5 transition-all"
+                >
+                  {isEnglish ? 'Next' : 'Tiếp'}
+                </button>
               </div>
             )}
           </div>
