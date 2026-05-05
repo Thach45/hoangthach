@@ -76,3 +76,15 @@ export async function getPosts(page = 1, limit = 7, category = 'All', search = '
     return { posts: [], total: 0, totalPages: 0 };
   }
 }
+
+export async function getPostBySlug(slug: string) {
+  try {
+    const post = await prisma.post.findUnique({
+      where: { slug },
+    });
+    return JSON.parse(JSON.stringify(post));
+  } catch (error) {
+    console.error("Get post by slug error:", error);
+    return null;
+  }
+}

@@ -10,7 +10,7 @@ export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/admin/login");
 
-  const posts = await getPosts();
+  const { posts } = await getPosts(1, 100);
 
   return (
     <div className="p-8 md:p-12">

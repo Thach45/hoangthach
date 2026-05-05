@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Clock, Calendar, Tag, ChevronRight, Heart } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { getPosts } from '@/actions/blog-actions';
+import { getPostBySlug } from '@/actions/blog-actions';
 
 export default function BlogPostDetail({ params }: { params: { slug: string } }) {
   const { isEnglish } = useLanguage();
@@ -16,9 +16,7 @@ export default function BlogPostDetail({ params }: { params: { slug: string } })
 
   useEffect(() => {
     async function loadPost() {
-      const posts = await getPosts();
-      const dbPost = posts.find((p: any) => p.slug === params.slug);
-      
+      const dbPost = await getPostBySlug(params.slug);
       setPost(dbPost);
       setLoading(false);
     }
