@@ -3,12 +3,12 @@
 import { useState, useRef, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial, Preload } from "@react-three/drei";
-import * as random from "maath/random/dist/maath-random.esm";
+import { inSphere } from "maath/random";
 
 const Stars = (props: any) => {
   const ref = useRef<any>();
   const [sphere] = useState(() => {
-    const s = random.inSphere(new Float32Array(5001), { radius: 1.2 }) as Float32Array;
+    const s = inSphere(new Float32Array(5001), { radius: 1.2 }) as Float32Array;
     if (s.some((v) => isNaN(v))) return new Float32Array(0);
     return s;
   });
