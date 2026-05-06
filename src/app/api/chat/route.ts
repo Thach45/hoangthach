@@ -78,9 +78,10 @@ export async function GET(req: Request) {
       throw new Error("NEXTAUTH_URL is not defined in environment variables");
     }
 
-    const prompt = `You are a visionary tech strategist. Generate a single, highly engaging, and viral blog post topic for a backend developer portfolio. 
-    The topic should be deep, technical but accessible, and trending in 2026. 
-    Focus on one of these: [Technology, Backend, AI & ML, DevOps, System Design, Vibe Code].
+    const prompt = `You are a creative technical content strategist. Generate a viral, catchy, and highly practical blog post title for a backend developer portfolio. 
+    The topic should be modern (2026), slightly edgy, and combine backend expertise with real-world application (e.g., clever optimizations, new developer tools, AI integration, or career insights). 
+    The topic MUST fall into one of these categories: [Technology, Backend, AI & ML, DevOps, System Design, Database, UI/UX, Career, Vibe Code, News].
+    Avoid dry, academic System Design topics. Make it sound like a "must-read" article on Dev.to or Hacker News. 
     Output ONLY the title string, no quotes, no explanation.`;
 
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
