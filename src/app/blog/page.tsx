@@ -18,7 +18,7 @@ export default function BlogPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  const categories = ['All', 'Technology', 'Backend', 'AI & ML', 'DevOps', 'System Design', 'Database', 'UI/UX', 'Career', 'Vibe Code', 'News'];
+  const categories = ['All', 'Technology', 'Backend', 'AI & ML', 'Algorithms', 'Programming Languages', 'System Design', 'Database', 'Career', 'Vibe Code', 'News'];
 
   useEffect(() => {
     const loadPosts = async () => {

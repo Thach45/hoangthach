@@ -8,7 +8,7 @@ export const maxDuration = 60;
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const topic = searchParams.get("topic");
+    const topic = searchParams.get("topic") || searchParams.get("idea");
 
     if (!topic) {
       return NextResponse.json({ error: "Missing topic" }, { status: 400 });

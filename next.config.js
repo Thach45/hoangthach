@@ -6,7 +6,8 @@ const nextConfig = {
       'www.svgrepo.com',
       'res.cloudinary.com',
       'images.unsplash.com',
-      "cdn2.fptshop.com.vn"
+      "cdn2.fptshop.com.vn",
+      "source.unsplash.com"
     ],
   },
   // Allow importing SVG files

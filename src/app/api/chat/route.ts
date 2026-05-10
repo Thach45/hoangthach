@@ -1,57 +1,41 @@
 import { NextResponse } from 'next/server';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export const maxDuration = 60; // Allow up to 60 seconds for AI generation
+
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || "");
 
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
-    const apiKey = process.env.GROQ_API_KEY;
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    if (!apiKey) {
-      return NextResponse.json({ error: 'Server configuration error: Missing API Key' }, { status: 500 });
-    }
-
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        messages,
-        model: 'llama-3.3-70b-versatile'
-      })
+    // Convert message history for Gemini
+    const chat = model.startChat({
+      history: messages.slice(0, -1).map((msg: any) => ({
+        role: msg.role === "user" ? "user" : "model",
+        parts: [{ text: msg.content }],
+      })),
     });
 
-    const data = await response.json();
+    const lastMessage = messages[messages.length - 1].content;
+    const result = await chat.sendMessage(lastMessage);
+    const response = await result.response;
+    const text = response.text();
 
-    // Check for API errors (Rate limits, etc.)
-    if (!response.ok) {
-      console.error('Groq API Error:', data);
-      
-      let friendlyMessage = "Hình như mình đang bận một chút, bạn đợi xíu rồi nhắn lại nhé! 😅";
-      
-      if (response.status === 429) {
-        friendlyMessage = "Nhiều bạn đang nhắn tin quá nên mình hơi quá tải, đợi mình vài giây rồi tâm sự tiếp nha! 😊";
-      }
-
-      // Return a fake AI response structure so the frontend doesn't crash
-      return NextResponse.json({
-        choices: [{
-          message: {
-            content: friendlyMessage
-          }
-        }]
-      });
-    }
-
-    return NextResponse.json(data);
-  } catch (error: any) {
-    console.error('Chat API Error:', error);
     return NextResponse.json({
       choices: [{
         message: {
-          content: "Oops! Có lỗi gì đó rồi, bạn kiểm tra lại kết nối hoặc nhắn lại sau nhé! 😅"
+          content: text
+        }
+      }]
+    });
+  } catch (error) {
+    console.error("Gemini Chat Error:", error);
+    return NextResponse.json({
+      choices: [{
+        message: {
+          content: "Oops! Gemini đang bận một chút, bạn thử lại sau nhé! 😅"
         }
       }]
     });
@@ -69,7 +53,6 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const apiKey = process.env.GROQ_API_KEY;
     const resendKey = process.env.RESEND_API_KEY;
     const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL;
     const baseUrl = process.env.NEXTAUTH_URL;
@@ -78,26 +61,20 @@ export async function GET(req: Request) {
       throw new Error("NEXTAUTH_URL is not defined in environment variables");
     }
 
-    const prompt = `You are a creative technical content strategist. Generate a viral, catchy, and highly practical blog post title for a backend developer portfolio. 
-    The topic should be modern (2026), slightly edgy, and combine backend expertise with real-world application (e.g., clever optimizations, new developer tools, AI integration, or career insights). 
-    The topic MUST fall into one of these categories: [Technology, Backend, AI & ML, DevOps, System Design, Database, UI/UX, Career, Vibe Code, News].
-    Avoid dry, academic System Design topics. Make it sound like a "must-read" article on Dev.to or Hacker News. 
+    const prompt = `You are a relatable technical mentor. Generate a viral, catchy, and highly practical blog post title for a backend developer portfolio. 
+    The topic should be at a Senior level or below, focusing on common pitfalls, subtle optimizations, or "underrated" best practices that developers often overlook in their day-to-day work. 
+    Avoid overly complex architectural topics or high-level academic system design. Think about "hidden gems" or "things I wish I knew earlier" type of content.
+    The topic MUST fall into one of these categories: [Technology, Backend, AI & ML, Algorithms, Programming Languages, System Design, Database, Career, Vibe Code, News].
     Output ONLY the title string, no quotes, no explanation.`;
 
-    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        messages: [{ role: "user", content: prompt }],
-        model: 'llama-3.3-70b-versatile'
-      })
-    });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const idea = response.text().trim();
 
-    const groqData = await groqRes.json();
-    const idea = groqData.choices[0].message.content.trim();
+    if (!idea) {
+      throw new Error("Failed to generate idea from Gemini");
+    }
 
     // Send Email via Resend
     const emailRes = await fetch('https://api.resend.com/emails', {
@@ -113,16 +90,18 @@ export async function GET(req: Request) {
         html: `
           <div style="font-family: sans-serif; padding: 20px; color: #111;">
             <h2 style="color: #6366f1;">New AI-Powered Blog Idea</h2>
-            <p>Hey Thach, I've got a fresh idea for your portfolio:</p>
-            <div style="background: #f4f4f5; padding: 15px; border-left: 4px solid #6366f1; font-size: 18px; font-weight: bold; margin: 20px 0;">
+            <p>I've brainstormed a new topic for your portfolio:</p>
+            <div style="background: #f3f4f6; padding: 15px; border-radius: 10px; font-size: 1.2em; font-weight: bold; margin: 20px 0;">
               ${idea}
             </div>
-            <p>If you like this, click the button below to generate full content and publish it automatically:</p>
-            <a href="${baseUrl}/api/blog/automate?topic=${encodeURIComponent(idea)}" 
-               style="background: #111; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
-              Publish Now ✨
+            <p>Ready to turn this into a full article?</p>
+            <a href="${baseUrl}/api/blog/automate?key=${process.env.CRON_SECRET}&idea=${encodeURIComponent(idea)}" 
+               style="display: inline-block; background: #6366f1; color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+              🚀 Publish Now
             </a>
-            <p style="font-size: 12px; color: #71717a; margin-top: 30px;">This idea was generated by Llama 3.3 via Groq.</p>
+            <p style="color: #666; font-size: 0.8em; margin-top: 30px;">
+              This idea was generated by Gemini 2.5 Flash based on your "Practical Mentor" persona.
+            </p>
           </div>
         `
       })
@@ -130,7 +109,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ success: true, idea });
   } catch (error: any) {
-    console.error('Automation Error:', error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    console.error("Automation Error:", error);
+    return NextResponse.json({ success: false, error: error.message });
   }
 }
