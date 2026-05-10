@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { CHAT_SYSTEM_PROMPT } from '@/data/data';
 
 export const maxDuration = 60; // Allow up to 60 seconds for AI generation
 
@@ -8,14 +9,23 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-2.5-flash",
+      systemInstruction: CHAT_SYSTEM_PROMPT
+    });
 
-    // Convert message history for Gemini
+    // Convert message history for Gemini, ensuring it starts with a 'user' message
+    const formattedHistory = messages.slice(0, -1).map((msg: any) => ({
+      role: msg.role === "user" ? "user" : "model",
+      parts: [{ text: msg.content }],
+    }));
+
+    // Gemini requires the first message in history to be from the 'user'
+    const firstUserIndex = formattedHistory.findIndex((m: any) => m.role === 'user');
+    const finalHistory = firstUserIndex !== -1 ? formattedHistory.slice(firstUserIndex) : [];
+
     const chat = model.startChat({
-      history: messages.slice(0, -1).map((msg: any) => ({
-        role: msg.role === "user" ? "user" : "model",
-        parts: [{ text: msg.content }],
-      })),
+      history: finalHistory,
     });
 
     const lastMessage = messages[messages.length - 1].content;
@@ -35,7 +45,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       choices: [{
         message: {
-          content: "Oops! Gemini đang bận một chút, bạn thử lại sau nhé! 😅"
+          content: "Oops! tôi đang bận một chút, bạn thử lại sau nhé! 😅"
         }
       }]
     });

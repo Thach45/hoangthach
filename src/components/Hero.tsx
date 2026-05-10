@@ -41,12 +41,12 @@ export default function Hero() {
             >
               BACKEND
             </motion.div>
-            <h1 
+            {/* <h1 
               className="relative text-7xl md:text-8xl font-bold gradient-text leading-tight"
               data-depth="0.1"
             >
               {isEnglish ? personalInfo.title.en : personalInfo.title.vi}
-            </h1>
+            </h1> */}
           </div>
         </div>
       </div>
