@@ -64,11 +64,11 @@ function PaperCard({ imprint, index }: { imprint: Imprint; index: number }) {
           <div className="relative p-8">
             <div className={`flex flex-col ${index % 2 === 0 ? 'md:items-end' : 'md:items-start'} gap-2`}>
               <div className="flex items-center gap-3">
-                <span className="text-sm font-black text-brand tracking-widest uppercase">
+                <span className="text-sm font-black text-brand uppercase">
                   {imprint.year}
                 </span>
                 {imprint.highlight && (
-                  <span className="text-[10px] font-black px-3 py-1 rounded-full bg-brand text-white shadow-sm uppercase tracking-tighter">
+                  <span className="text-[10px] font-black px-3 py-1 rounded-full bg-brand text-white shadow-sm uppercase">
                     {isEnglish ? 'Special' : 'Đặc biệt'}
                   </span>
                 )}
@@ -115,7 +115,7 @@ function PaperCard({ imprint, index }: { imprint: Imprint; index: number }) {
             </div>
 
             <div className={`mt-10 flex items-center ${index % 2 === 0 ? 'justify-end' : 'justify-start'}`}>
-              <div className="px-4 py-2 bg-brand/5 dark:bg-brand/10 border border-brand/20 rounded-md text-[11px] font-bold text-brand uppercase tracking-widest flex items-center gap-2">
+              <div className="px-4 py-2 bg-brand/5 dark:bg-brand/10 border border-brand/20 rounded-md text-[11px] font-bold text-brand uppercase flex items-center gap-2">
                  <div className="w-2 h-2 rounded-full bg-brand animate-ping" />
                  {isEnglish ? 'Authenticated Memory' : 'Dấu ấn xác thực'}
               </div>

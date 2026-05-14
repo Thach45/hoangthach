@@ -57,7 +57,7 @@ export default function FixedContactBar() {
           whileHover={{ scale: 1.1, x: 10 }}
           title={'name' in item ? item.name : ''}
         >
-          <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 fill-current text-black dark:text-white" viewBox="0 0 24 24">
             {item.icon}
           </svg>
         </motion.a>

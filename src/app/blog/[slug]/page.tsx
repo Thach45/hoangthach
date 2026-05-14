@@ -32,7 +32,7 @@ export default function BlogPostDetail({ params }: { params: { slug: string } })
     switch (section.type) {
       case 'heading':
         return (
-          <h2 key={index} className="text-3xl font-bold mt-12 mb-6 tracking-tight">
+          <h2 key={index} className="text-3xl font-bold mt-12 mb-6 ">
             {isEnglish ? section.data.en : section.data.vi}
           </h2>
         );
@@ -86,7 +86,7 @@ export default function BlogPostDetail({ params }: { params: { slug: string } })
       case 'code-block':
         return (
           <div key={index} className="my-10 group relative">
-            <div className="absolute -top-3 right-6 bg-zinc-800 text-zinc-400 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-zinc-700 z-10">
+            <div className="absolute -top-3 right-6 bg-zinc-800 text-zinc-400 text-[10px] font-black uppercase  px-3 py-1 rounded-full border border-zinc-700 z-10">
               {section.language || 'code'}
             </div>
             <pre className="bg-zinc-900 text-zinc-300 p-8 rounded-3xl overflow-x-auto border border-zinc-800 font-mono text-sm leading-relaxed shadow-lg">

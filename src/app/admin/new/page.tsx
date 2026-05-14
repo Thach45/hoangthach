@@ -116,7 +116,7 @@ export default function NewPostPage() {
             
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Featured Image URL</label>
+                <label className="text-[10px] font-black uppercase  text-zinc-400 ml-1">Featured Image URL</label>
                 <input 
                   type="text" 
                   value={formData.image}
@@ -126,7 +126,7 @@ export default function NewPostPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Category</label>
+                  <label className="text-[10px] font-black uppercase  text-zinc-400 ml-1">Category</label>
                   <input 
                     type="text" 
                     value={formData.category}
@@ -135,7 +135,7 @@ export default function NewPostPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Read Time</label>
+                  <label className="text-[10px] font-black uppercase  text-zinc-400 ml-1">Read Time</label>
                   <input 
                     type="text" 
                     value={formData.readTime}
@@ -156,7 +156,7 @@ export default function NewPostPage() {
             
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">English Title</label>
+                <label className="text-[10px] font-black uppercase  text-zinc-400 ml-1">English Title</label>
                 <input 
                   type="text" 
                   value={formData.title.en}
@@ -165,7 +165,7 @@ export default function NewPostPage() {
                 />
               </div>
               <div>
-                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Vietnamese Title</label>
+                <label className="text-[10px] font-black uppercase  text-zinc-400 ml-1">Vietnamese Title</label>
                 <input 
                   type="text" 
                   value={formData.title.vi}
@@ -191,7 +191,7 @@ export default function NewPostPage() {
                   {idx + 1}
                 </div>
                 <div className="flex-1">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{section.type}</span>
+                  <span className="text-[10px] font-black uppercase  text-zinc-400">{section.type}</span>
                   <p className="text-sm font-medium dark:text-zinc-300 truncate">
                     {section.data ? section.data.en : section.title ? section.title.en : "Content block"}
                   </p>

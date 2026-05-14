@@ -77,16 +77,12 @@ export default function Layout({ children }: LayoutProps) {
   }, []);
 
   return (
-    <DarkModeProvider>
-      <LanguageProvider>
-        <div className="bg-gray-50 dark:bg-gray-900 cursor-glow min-h-screen">
-          <PreLoader />
-          <div className="scroll-progress"></div>
-          {children}
-          <div id="particles"></div>
-          <ScrollToTop />
-        </div>
-      </LanguageProvider>
-    </DarkModeProvider>
+    <div className="bg-gray-50 dark:bg-gray-900 cursor-glow min-h-screen">
+      <PreLoader />
+      <div className="scroll-progress"></div>
+      {children}
+      <div id="particles"></div>
+      <ScrollToTop />
+    </div>
   );
 }

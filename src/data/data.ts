@@ -45,7 +45,7 @@ export const navItems = [
   { href: '#about', vi: 'Giới thiệu', en: 'About' },
   { href: '#skills', vi: 'Kỹ năng', en: 'Skills' },
   { href: '#imprints', vi: 'Dấu ấn', en: 'Imprints' },
-  { href: '#projects', vi: 'Dự án', en: 'Projects' },
+  { href: '/projects', vi: 'Dự án', en: 'Projects' },
   { href: '/blog', vi: 'Blog', en: 'Blog' },
   { href: '/talk-with-me', vi: 'Trò chuyện', en: 'Talk With Me' },
   { href: '#contact', vi: 'Liên hệ', en: 'Contact' },
@@ -292,6 +292,58 @@ export const projects: Project[] = [
         'Kết hợp thuật toán SM-2 và forgetting curve để tối ưu lịch ôn tập cá nhân',
         'Xây dựng kiến trúc WebSocket hướng sự kiện cho cập nhật tức thời và tương tác trực tiếp',
         'Triển khai JWT + Google OAuth2 với RBAC và tối ưu hiệu năng bằng Redis'
+      ]
+    }
+  },
+  {
+    id: '4',
+    title: 'Cloud Note - Smart AI Note-taking',
+    image: 'https://res.cloudinary.com/drblblupt/image/upload/v1778751571/A%CC%89nh_ma%CC%80n_hi%CC%80nh_2026-05-14_lu%CC%81c_16.38.12_cusvy5.png',
+    description: {
+      en: 'A premium "AI-first" note-taking platform featuring intelligent writing assistance, voice-to-note transformation, and automated VIP management.',
+      vi: 'Nền tảng ghi chú thông minh "AI-first" với trợ lý viết lách, chuyển đổi giọng nói thành văn bản và hệ thống quản lý VIP tự động.',
+    },
+    tech: ['React 18', 'TypeScript', 'Vite', 'Tailwind CSS', 'Shadcn UI', 'Framer Motion', 'Mantine', 'BlockNote', 'Supabase', 'Google Gemini'],
+    link: 'https://cloud-note-pink.vercel.app/',
+    github: 'https://github.com/thach45/cloud-note',
+    demoVideo: 'https://res.cloudinary.com/drblblupt/video/upload/v1778751589/Ghi_Ma%CC%80n_hi%CC%80nh_2026-05-14_lu%CC%81c_16.37.18_pgcawn.mov',
+    techStack: 'React 18, TypeScript, Vite, Tailwind CSS, Shadcn UI, Framer Motion, Mantine, BlockNote, Supabase, Google Gemini (gemini-2.5-flash)',
+    languages: ['TypeScript'],
+    frameworks: ['React', 'Vite'],
+    status: {
+      en: 'Developing',
+      vi: 'Đang phát triển',
+    },
+    startDate: '2024-05-01',
+    category: 'fullstack',
+    metrics: {
+      commits: 86,
+      pullRequests: 14,
+      issues: 22,
+      timeSpent: 120
+    },
+    challenges: {
+      en: [
+        'Implementing "AI-first" writing assistant with real-time markdown streaming',
+        'Processing voice recordings into structured, clean notes without filler words',
+        'Building a reliable automated payment verification system for VIP tiers'
+      ],
+      vi: [
+        'Triển khai trợ lý viết "AI-first" với tính năng stream định dạng Markdown thời gian thực',
+        'Xử lý ghi âm giọng nói thành ghi chú có cấu trúc, loại bỏ từ đệm và lỗi ngữ pháp',
+        'Xây dựng hệ thống xác thực thanh toán tự động tin cậy cho các gói thành viên VIP'
+      ]
+    },
+    solutions: {
+      en: [
+        'Customized BlockNote core to handle Gemini 2.5 Flash output and non-destructive "Continue Writing" logic',
+        'Used AI Edge Functions to restructure raw transcripts into professional documents (Sober Editorial style)',
+        'Integrated SePay with Supabase Edge Functions for instant transaction matching and role-based access control'
+      ],
+      vi: [
+        'Tùy biến core BlockNote để xử lý output từ Gemini 2.5 Flash và logic "Viết tiếp..." không đè văn bản cũ',
+        'Sử dụng Edge Functions để cấu trúc lại bản ghi thô thành tài liệu chuyên nghiệp (phong cách Sober Editorial)',
+        'Tích hợp SePay với Supabase Edge Functions để khớp mã đơn hàng và phân quyền người dùng tức thì'
       ]
     }
   }

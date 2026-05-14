@@ -22,7 +22,7 @@ export default async function AdminLayout({
         <aside className="w-64 border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hidden md:flex flex-col p-6 sticky top-0 h-screen">
           <div className="mb-10">
             <h1 className="text-xl font-black gradient-text">Admin Panel</h1>
-            <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest mt-1">Hoang Thach Portfolio</p>
+            <p className="text-[10px] text-zinc-400 font-bold uppercase  mt-1">Hoang Thach Portfolio</p>
           </div>
 
           <nav className="space-y-2 flex-1">

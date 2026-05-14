@@ -70,7 +70,7 @@ export default function AdminLogin() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 ml-1">Email Address</label>
+            <label className="text-xs font-bold uppercase  text-zinc-400 ml-1">Email Address</label>
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
               <input 
@@ -85,7 +85,7 @@ export default function AdminLogin() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 ml-1">Password</label>
+            <label className="text-xs font-bold uppercase  text-zinc-400 ml-1">Password</label>
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
               <input 

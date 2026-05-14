@@ -9,6 +9,7 @@ import ProjectSkeleton from './ProjectSkeleton';
 import { projects } from '@/data/data';
 import { Project } from '@/types/project';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Projects() {
   const { isEnglish } = useLanguage();
@@ -132,13 +133,19 @@ export default function Projects() {
         </motion.div>
 
         {!isLoading && hasMore && filteredProjects.length > 0 && (
-          <div className="mt-12 text-center">
+          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => setPage(p => p + 1)}
-              className="px-6 py-3 bg-brand-gradient text-white rounded-full hover:brightness-110 transition-all"
+              className="w-full sm:w-auto px-8 py-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-all font-bold text-gray-800 dark:text-white"
             >
-              {isEnglish ? 'Load More Projects' : 'Xem thêm dự án'}
+              {isEnglish ? 'Load More' : 'Tải thêm'}
             </button>
+            <Link
+              href="/projects"
+              className="w-full sm:w-auto px-8 py-3 bg-brand-gradient text-white rounded-full hover:brightness-110 transition-all font-bold text-center"
+            >
+              {isEnglish ? 'View All Projects' : 'Xem tất cả dự án'}
+            </Link>
           </div>
         )}
       </div>
@@ -188,7 +195,7 @@ function ProjectCard({ project, isEnglish, index, onClick }: ProjectCardProps) {
         <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-all duration-500">
           <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md shadow-lg ${project.endDate ? 'bg-green-500' : 'bg-yellow-500'}`}>
             <span className="w-1 h-1 rounded-full bg-white animate-pulse" />
-            <span className="text-[9px] font-bold text-white tracking-wider uppercase ">
+            <span className="text-[9px] font-bold text-white uppercase ">
               {isEnglish ? project.status.en : project.status.vi}
             </span>
           </div>
@@ -242,7 +249,7 @@ function ProjectCard({ project, isEnglish, index, onClick }: ProjectCardProps) {
             )}
           </div>
 
-          <div className="flex items-center text-brand font-bold text-sm tracking-wide">
+          <div className="flex items-center text-brand font-bold text-sm">
             {isEnglish ? 'DETAILS' : 'CHI TIẾT'}
             <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />

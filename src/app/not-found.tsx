@@ -23,7 +23,7 @@ export default function NotFound() {
           <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          <span className="font-bold tracking-wider">BACK TO EARTH</span>
+          <span className="font-bold ">BACK TO EARTH</span>
         </Link>
       </motion.div>
 

@@ -104,7 +104,7 @@ export default function TalkWithMe() {
         className="absolute top-6 left-6 z-50 flex items-center gap-2 text-white/60 hover:text-white transition-colors bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-        <span className="text-sm font-bold uppercase tracking-wider">{isEnglish ? 'Back' : 'Quay lại'}</span>
+        <span className="text-sm font-bold uppercase ">{isEnglish ? 'Back' : 'Quay lại'}</span>
       </Link>
 
       {/* 3D Background - Stars & Character */}
@@ -166,7 +166,7 @@ export default function TalkWithMe() {
             animate={{ opacity: 1, x: 0 }}
             className="flex gap-2 bg-brand/20 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-brand/30"
           >
-            <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-brand">Thinking</span>
+            <span className="text-[9px] sm:text-[10px] font-bold uppercase  text-brand">Thinking</span>
             <div className="flex gap-1 items-center">
               <span className="w-1 h-1 bg-brand rounded-full animate-bounce"></span>
               <span className="w-1 h-1 bg-brand rounded-full animate-bounce delay-100"></span>

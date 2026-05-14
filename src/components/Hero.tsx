@@ -72,7 +72,7 @@ export default function Hero() {
             </p>
             
             <div className="flex flex-wrap items-center justify-center gap-6" data-depth="0.02">
-              <Link href="#projects" className="bg-brand text-white px-10 py-4 rounded-full text-lg font-bold hover:brightness-110 transition-all transform hover:scale-105 shadow-xl shadow-brand/25">
+              <Link href="/projects" className="bg-brand text-white px-10 py-4 rounded-full text-lg font-bold hover:brightness-110 transition-all transform hover:scale-105 shadow-xl shadow-brand/25">
                 {isEnglish ? heroText.exploreBtn.en : heroText.exploreBtn.vi}
               </Link>
               
