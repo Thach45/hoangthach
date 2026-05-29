@@ -10,6 +10,7 @@
     "prettier": "prettier --write ."
   },
   "dependencies": {
+    "@google/genai": "^2.7.0",
     "@google/generative-ai": "^0.24.1",
     "@prisma/client": "^6.19.3",
     "@react-three/drei": "^9.122.0",
