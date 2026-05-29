@@ -33,14 +33,33 @@ export default function Hero() {
       {/* Layer 1: Background Title (z-10) */}
       <div className="absolute inset-0 flex items-center justify-center z-10 -mt-64">
         <div className="container mx-auto px-6 text-center">
-          <div className="relative">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.05 }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[120px] md:text-[200px] font-black pointer-events-none select-none dark:text-white text-gray-900 uppercase"
-            >
-              THACH HOANG
-            </motion.div>
+          <div className="relative w-full">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[110px] md:text-[200px] font-black pointer-events-none select-none dark:text-white text-gray-900 uppercase whitespace-nowrap tracking-tighter flex justify-center">
+              {"THACH HOANG".split("").map((char, index) => (
+                <motion.span
+                  key={index}
+                  initial={{ opacity: 0.02, y: 0 }}
+                  animate={{ 
+                    opacity: [0.02, 0.25, 0.02], 
+                    y: [0, -15, 0],
+                    textShadow: [
+                      "0px 0px 0px rgba(6, 182, 212, 0)",
+                      "0px 0px 50px rgba(6, 182, 212, 0.8)",
+                      "0px 0px 0px rgba(6, 182, 212, 0)"
+                    ]
+                  }}
+                  transition={{
+                    duration: 3.5,
+                    repeat: Infinity,
+                    delay: index * 0.2,
+                    ease: "easeInOut"
+                  }}
+                  className={`${char === " " ? "w-[30px] md:w-[50px]" : ""} inline-block`}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
