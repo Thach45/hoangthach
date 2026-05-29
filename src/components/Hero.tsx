@@ -39,14 +39,8 @@ export default function Hero() {
               animate={{ opacity: 0.05 }}
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[120px] md:text-[200px] font-black pointer-events-none select-none dark:text-white text-gray-900 uppercase"
             >
-              BACKEND
+              THACH HOANG
             </motion.div>
-            {/* <h1 
-              className="relative text-7xl md:text-8xl font-bold gradient-text leading-tight"
-              data-depth="0.1"
-            >
-              {isEnglish ? personalInfo.title.en : personalInfo.title.vi}
-            </h1> */}
           </div>
         </div>
       </div>
@@ -57,7 +51,7 @@ export default function Hero() {
       </div>
 
       {/* Layer 3: Foreground Intro & Actions (z-30) */}
-      <div className="absolute inset-0 flex items-center justify-center z-30 mt-80">
+      <div className="absolute inset-0 flex items-center justify-center z-50 mt-80">
         <div className="container mx-auto px-6 text-center">
           <div className="space-y-10">
             <p 
@@ -71,26 +65,23 @@ export default function Hero() {
               )}
             </p>
             
-            <div className="flex flex-wrap items-center justify-center gap-6" data-depth="0.02">
-              <Link href="/projects" className="bg-brand text-white px-10 py-4 rounded-full text-lg font-bold hover:brightness-110 transition-all transform hover:scale-105 shadow-xl shadow-brand/25">
-                {isEnglish ? heroText.exploreBtn.en : heroText.exploreBtn.vi}
-              </Link>
+            <div className="flex flex-wrap z-50 items-center justify-center gap-6" data-depth="0.02">
               
               <div className="flex flex-wrap justify-center gap-4">
                 <a
                   href={personalInfo.cv.backend}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group border-2 border-brand text-brand px-6 py-3 rounded-xl text-base font-bold hover:bg-brand hover:text-white transition-all transform hover:scale-105 inline-flex items-center gap-2 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm"
+                  className="group border-2 z-50 border-brand text-brand px-6 py-3 rounded-xl text-base font-bold hover:bg-brand hover:text-white transition-all transform hover:scale-105 inline-flex items-center gap-2 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm"
                 >
                   <span>CV Backend</span>
-                  <svg className="w-4 h-4 group-hover:translate-y-[-2px] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M7 10l5 5m0 0l5-5m-5 5V3"/></svg>
+                  <svg className="w-4 h-4  group-hover:translate-y-[-2px] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M7 10l5 5m0 0l5-5m-5 5V3"/></svg>
                 </a>
                 <a
                   href={personalInfo.cv.fullstack}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group border-2 border-brandCyan text-brandCyan px-6 py-3 rounded-xl text-base font-bold hover:bg-brandCyan hover:text-white transition-all transform hover:scale-105 inline-flex items-center gap-2 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm"
+                  className="group border-2 z-50 border-brandCyan text-brandCyan px-6 py-3 rounded-xl text-base font-bold hover:bg-brandCyan hover:text-white transition-all transform hover:scale-105 inline-flex items-center gap-2 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm"
                 >
                   <span>CV Fullstack</span>
                   <svg className="w-4 h-4 group-hover:translate-y-[-2px] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M7 10l5 5m0 0l5-5m-5 5V3"/></svg>
