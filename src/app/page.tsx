@@ -116,9 +116,9 @@ export default function Home() {
           <Skills />
         </ScrollSection>
 
-        <ScrollSection>
+        {/* <ScrollSection>
           <PersonalImprints variant="preview" />
-        </ScrollSection>
+        </ScrollSection> */}
 
         <ScrollSection>
           <Projects />

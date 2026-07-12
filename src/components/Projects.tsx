@@ -19,9 +19,7 @@ export default function Projects() {
   const [selectedFramework, setSelectedFramework] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const projectsPerPage = 6;
 
   // Simulate loading state
   useEffect(() => {
@@ -32,10 +30,7 @@ export default function Projects() {
   }, []);
 
   // Reset page when filters change
-  useEffect(() => {
-    setPage(1);
-  }, [selectedCategory, selectedStatus, selectedLanguage, selectedFramework, searchQuery]);
-
+  
   const filteredProjects = projects
     .filter((project) => {
       const matchesCategory = selectedCategory === 'all' || project.category === selectedCategory;
@@ -53,22 +48,7 @@ export default function Projects() {
         project.frameworks.some(framework => framework.toLowerCase().includes(searchQuery.toLowerCase()));
       
       return matchesCategory && matchesStatus && matchesLanguage && matchesFramework && matchesSearch;
-    })
-    .slice(0, page * projectsPerPage);
-
-  const hasMore = filteredProjects.length < projects
-    .filter(p => 
-      (selectedCategory === 'all' || p.category === selectedCategory) &&
-      (selectedStatus === 'all' || 
-        (selectedStatus === 'developing' && !p.endDate) ||
-        (selectedStatus === 'completed' && p.endDate)) &&
-      (selectedLanguage === 'all' || p.languages.includes(selectedLanguage)) &&
-      (selectedFramework === 'all' || p.frameworks.includes(selectedFramework)) &&
-      (p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.tech.some(tech => tech.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        p.languages.some(lang => lang.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        p.frameworks.some(framework => framework.toLowerCase().includes(searchQuery.toLowerCase())))
-    ).length;
+    });
 
   return (
     <section id="projects" className="py-20 bg-white dark:bg-gray-800">
@@ -132,19 +112,13 @@ export default function Projects() {
           </AnimatePresence>
         </motion.div>
 
-        {!isLoading && hasMore && filteredProjects.length > 0 && (
-          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={() => setPage(p => p + 1)}
-              className="w-full sm:w-auto px-8 py-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-all font-bold text-gray-800 dark:text-white"
-            >
-              {isEnglish ? 'Load More' : 'Tải thêm'}
-            </button>
+        {!isLoading && filteredProjects.length > 3 && (
+          <div className="mt-12 flex items-center justify-center">
             <Link
               href="/projects"
-              className="w-full sm:w-auto px-8 py-3 bg-brand-gradient text-white rounded-full hover:brightness-110 transition-all font-bold text-center"
+              className="px-8 py-3 bg-brand-gradient text-white rounded-full hover:brightness-110 transition-all font-bold text-center shadow-lg"
             >
-              {isEnglish ? 'View All Projects' : 'Xem tất cả dự án'}
+              {isEnglish ? 'See More' : 'Xem thêm'}
             </Link>
           </div>
         )}

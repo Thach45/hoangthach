@@ -12,8 +12,8 @@ export const personalInfo = {
     en: 'Backend Developer',
   },
   bio: {
-    vi: 'Xin chào! Mình là Nguyễn Hoàng Thạch, 20 tuổi, hiện đang là sinh viên năm 3 tại HCMUTE chuyên ngành Công nghệ Thông tin. Mình yêu thích lập trình Backend Web và AI. Đây là nơi mình chia sẻ các dự án đã thực hiện, rất vui nếu bạn ghé qua!',
-    en: "Hello! I'm Nguyen Hoang Thach, a 20-year-old third-year student at HCMUTE majoring in Information Technology. I'm passionate about Backend Web Development and AI. This is where I share my completed projects, and I'm glad you're here!",
+    vi: 'Xin chào! Mình là Nguyễn Hoàng Thạch, 21 tuổi, hiện đang là sinh viên năm 4 tại HCMUTE chuyên ngành Công nghệ Thông tin. Mình yêu thích lập trình Backend Web và AI. Đây là nơi mình chia sẻ các dự án đã thực hiện, rất vui nếu bạn ghé qua!',
+    en: "Hello! I'm Nguyen Hoang Thach, a 21-year-old fourth-year student at HCMUTE majoring in Information Technology. I'm passionate about Backend Web Development and AI. This is where I share my completed projects, and I'm glad you're here!",
   },
   email: 'nguyenhoangthach2005@gmail.com',
   phone: '0372278818',
@@ -21,14 +21,14 @@ export const personalInfo = {
     vi: 'Thủ Đức, Thành phố Hồ Chí Minh',
     en: 'Thu Duc, Ho Chi Minh City',
   },
-  avatar: '/asset/anh2.png',
+  avatar: '/asset/anh3.png',
   cv: {
     backend: '/cv.pdf',
     fullstack: '/cv_fullstack.pdf',
   },
   links: {
     github: 'https://github.com/Thach45',
-    linkedin: 'https://www.linkedin.com/in/thach-nguyen-2005/',
+    linkedin: 'https://www.linkedin.com/in/nguyễn-hoàng-thạch-b1b930302',
     facebook: 'https://www.facebook.com/hoangthach.nguyen.5059',
   },
 };
@@ -44,7 +44,7 @@ export const navItems = [
   { href: '#home', vi: 'Trang chủ', en: 'Home' },
   { href: '#about', vi: 'Giới thiệu', en: 'About' },
   { href: '#skills', vi: 'Kỹ năng', en: 'Skills' },
-  { href: '#imprints', vi: 'Dấu ấn', en: 'Imprints' },
+  // { href: '#imprints', vi: 'Dấu ấn', en: 'Imprints' },
   { href: '/projects', vi: 'Dự án', en: 'Projects' },
   { href: '/blog', vi: 'Blog', en: 'Blog' },
   { href: '/talk-with-me', vi: 'Trò chuyện', en: 'Talk With Me' },
@@ -79,6 +79,8 @@ export const skills = {
       title: 'Backend',
       items: [
         { name: 'Node.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original-wordmark.svg', tags: ['Runtime', 'NPM', 'Async'], experience: '3+ Years', description: { en: 'Building fast and scalable server-side applications.', vi: 'Xây dựng backend nhanh, dễ mở rộng.' } },
+        { name: 'NestJS', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nestjs/nestjs-original.svg', tags: ['TypeScript', 'Architecture', 'Microservices'], experience: '2+ Years', description: { en: 'Progressive Node.js framework for scalable server-side apps.', vi: 'Framework Node.js hiện đại để xây dựng ứng dụng mở rộng.' } },
+        { name: 'Spring Boot', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg', tags: ['Java', 'Enterprise', 'REST API'], experience: '2+ Years', description: { en: 'Java-based framework for enterprise-ready applications.', vi: 'Framework Java cho các ứng dụng cấp doanh nghiệp.' } },
         { name: 'Express', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg', invert: true, tags: ['REST API', 'Middleware', 'Routing'], experience: '3+ Years', description: { en: 'Creating robust APIs and web servers.', vi: 'Thiết kế REST API và web server ổn định.' } },
         { name: 'Python', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg', tags: ['Scripting', 'Automation', 'Data'], experience: '2+ Years', description: { en: 'Versatile language for scripting and backend logic.', vi: 'Ngôn ngữ linh hoạt cho script, automation và backend.' } },
         { name: 'Flask', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flask/flask-original.svg', invert: true, tags: ['Microframework', 'Jinja2', 'APIs'], experience: '1+ Year', description: { en: 'Lightweight framework for building web services.', vi: 'Framework nhẹ để build web service nhanh.' } },
@@ -346,6 +348,114 @@ export const projects: Project[] = [
         'Tích hợp SePay với Supabase Edge Functions để khớp mã đơn hàng và phân quyền người dùng tức thì'
       ]
     }
+  },
+  {
+    id: '5',
+    title: 'Prompt to Video Studio',
+    image: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1000&auto=format&fit=crop',
+    description: {
+      en: 'An AI video prototyping engine that transforms text prompts into structured 9:16 vertical videos with real-time preview and editing.',
+      vi: 'Công cụ AI biến câu lệnh thành video dọc 9:16 có cấu trúc, hỗ trợ xem trước bằng Remotion và chỉnh sửa JSON trực tiếp.',
+    },
+    tech: ['Next.js', 'TypeScript', 'Remotion', 'Gemini AI', 'Tailwind'],
+    link: "https://www.tiktok.com/@codecungstone/video/7653838698827517205?is_from_webapp=1&sender_device=pc&web_id=7412845378067236370",
+    github: 'https://github.com/Thach45/prompt-to-video',
+    demoVideo: 'https://www.tiktok.com/@codecungstone/video/7653838698827517205?is_from_webapp=1&sender_device=pc&web_id=7412845378067236370',
+    techStack: 'Next.js, TypeScript, Remotion, Google Gemini (@google/genai), Tailwind CSS',
+    languages: ['TypeScript'],
+    frameworks: ['Next.js', 'Remotion'],
+    status: {
+      en: 'Developing',
+      vi: 'Đang phát triển',
+    },
+    startDate: '2024-07-01',
+    category: 'fullstack',
+    metrics: {
+      commits: 34,
+      pullRequests: 2,
+      issues: 5,
+      timeSpent: 60
+    },
+    challenges: {
+      en: [
+        'Mapping AI-generated JSON specs to structured video scenes without rendering crashes',
+        'Implementing real-time streaming of generation progress to the frontend',
+        'Creating a seamless feedback loop between code editor and video player'
+      ],
+      vi: [
+        'Ánh xạ thông số JSON từ AI sang các scene video mà không gây lỗi render',
+        'Triển khai stream tiến trình sinh video realtime từ backend xuống frontend',
+        'Tạo vòng lặp phản hồi mượt mà giữa trình soạn thảo JSON và trình phát video'
+      ]
+    },
+    solutions: {
+      en: [
+        'Built a Validation Layer to clamp and normalize data, preventing Remotion player crashes',
+        'Used Next.js App Router API with event streams for real-time AI progress tracking',
+        'Integrated a live JSON editor that instantly applies spec updates to the Remotion preview'
+      ],
+      vi: [
+        'Xây dựng Validation Layer để chuẩn hoá dữ liệu, ngăn chặn lỗi crash của Remotion player',
+        'Sử dụng API của Next.js App Router với event stream để theo dõi tiến trình AI realtime',
+        'Tích hợp JSON editor cho phép cập nhật spec và xem preview trên Remotion ngay lập tức'
+      ]
+    }
+  },
+  {
+    id: '6',
+    title: 'ReWear - AI Smart Wardrobe',
+    image: '/asset/REWEAR.png',
+    description: {
+      en: 'An AI-powered smart wardrobe mobile app for sustainable fashion. Features context-aware outfit suggestions, Cost-per-Wear analytics, visual wear logs, local reminders, and Virtual Try-On (VTO) for saved outfits.',
+      vi: 'Ứng dụng tủ đồ thông minh AI hướng tới thời trang bền vững. Nổi bật với tính năng gợi ý phối đồ theo ngữ cảnh, phân tích Cost-per-Wear, lịch sử mặc trực quan, nhắc nhở đồ bị quên và mặc thử ảo (Virtual Try-On).',
+    },
+    tech: ['React Native', 'Expo', 'TypeScript', 'AI Integration'],
+    link: 'https://youtu.be/jJsK92cirB8',
+    github: 'https://github.com/Thach45/rewear-ai-closet',
+    demoVideo: 'https://youtu.be/jJsK92cirB8',
+    techStack: 'React Native, Expo, TypeScript, AI APIs',
+    languages: ['TypeScript'],
+    frameworks: ['React Native', 'Expo'],
+    status: {
+      en: 'Developing',
+      vi: 'Đang phát triển',
+    },
+    startDate: '2024-08-01',
+    category: 'fullstack',
+    metrics: {
+      commits: 20,
+      pullRequests: 1,
+      issues: 3,
+      timeSpent: 40
+    },
+    challenges: {
+      en: [
+        'Calculating and surfacing Cost-per-Wear without overwhelming the user with numbers',
+        'Generating context-aware outfit suggestions based on the user\'s actual wardrobe',
+        'Creating an engaging visual wear log and reminder system for forgotten clothes',
+        'Implementing a realistic Virtual Try-On (VTO) experience to help users visualize saved outfits'
+      ],
+      vi: [
+        'Tính toán và hiển thị Cost-per-Wear (CPW) hợp lý để làm nổi bật "chi phí ẩn" mà không gây rối mắt',
+        'Gợi ý phối đồ (AI Outfit Suggestion) bám sát ngữ cảnh và dữ liệu tủ đồ thực tế của người dùng',
+        'Xây dựng nhật ký mặc (Wear Log Calendar) trực quan và hệ thống nhắc nhở đồ bị lãng quên',
+        'Phát triển tính năng mặc thử ảo (Virtual Try-On) giúp người dùng hình dung trang phục thực tế'
+      ]
+    },
+    solutions: {
+      en: [
+        'Designed intuitive filters like "Most Wasted" to highlight underutilized items dynamically',
+        'Integrated AI models that take vibes, occasions, and closet items as inputs to provide reasoned outfit choices',
+        'Built a calendar view with thumbnails and implemented local notifications that reschedule automatically based on wear history',
+        'Integrated AI Virtual Try-On capabilities to overlay selected garments onto the user\'s photo for pre-wear visualization'
+      ],
+      vi: [
+        'Thiết kế bộ lọc "Lãng phí nhất" để làm nổi bật các trang phục ít được sử dụng dựa trên CPW',
+        'Tích hợp AI nhận đầu vào là vibe, ngữ cảnh và các item có sẵn để đưa ra gợi ý phối đồ có lý do rõ ràng',
+        'Phát triển giao diện lịch với thumbnail và cài đặt Local Notification tự động cập nhật lịch nhắc nhở theo hành vi mặc',
+        'Tích hợp công nghệ AI Virtual Try-On để chồng trang phục lên ảnh người dùng, giúp xem trước outfit dễ dàng'
+      ]
+    }
   }
 ];
 
@@ -385,7 +495,7 @@ Rules for responding:
 3. If asked to explain tech, focus on mental models, architecture flows, real-world tradeoffs, and scalability. Skip the textbook definitions.
 4. When talking about AI, sound like an engineer who cares about deployment costs, inference latency, context windows, and real product integration.
 5. Speak the user's language (Vietnamese or English) naturally. Mix in dev jargon (scale, cache, deploy, async, bug) freely.
-6. Keep it concise but insightful. Use emojis 🚀😂💀☕️🔥 to keep the vibe chill!`;
+6. CRITICAL RULE: YOU MUST KEEP YOUR RESPONSE EXTREMELY SHORT! NO MORE THAN 2 SENTENCES UNDER ANY CIRCUMSTANCES. Keep it concise but insightful. Use emojis 🚀😂💀☕️🔥 to keep the vibe chill!`;
 
 
 
