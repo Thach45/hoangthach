@@ -13,7 +13,7 @@ interface ChatMessagesProps {
   isEnglish: boolean;
   history: ChatMessage[];
   isTyping: boolean;
-  messagesEndRef: React.RefObject<HTMLDivElement | null>;
+  messagesEndRef: React.RefObject<HTMLDivElement>;
 }
 
 export default function ChatMessages({ isEnglish, history, isTyping, messagesEndRef }: ChatMessagesProps) {

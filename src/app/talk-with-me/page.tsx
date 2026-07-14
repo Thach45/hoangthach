@@ -83,7 +83,7 @@ export default function TalkWithMe() {
       },
       'Contact': { 
         q: isEnglish ? "How can I contact you?" : "Làm sao để liên hệ với bạn?", 
-        a: JSON.stringify({ text: isEnglish ? "I'd love to connect! You can reach me via the channels below." : "Rất vui được kết nối với bạn! Hãy liên hệ với mình qua các kênh dưới đây nhé.", widget: "contact" }) 
+        a: JSON.stringify({ text: isEnglish ? "I'd love to connect! You can reach me via the channels below." : "Rất vui được kết nối với bạn! Hãy liên hệ với mình qua các kênh dưới đây nhé. Hoặc bạn để lại Tên, Email, SDT, và nội dung. Mình sẽ liên hệ lại với bạn sớm nhất.", widget: "contact" }) 
       }
     };
     
