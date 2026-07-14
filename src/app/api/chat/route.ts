@@ -1,10 +1,33 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
+import { GoogleGenerativeAI, SchemaType, FunctionDeclaration } from '@google/generative-ai';
 import { CHAT_SYSTEM_PROMPT } from '@/data/data';
 
 export const maxDuration = 60; // Allow up to 60 seconds for AI generation
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '');
+
+const sendEmailFunction: FunctionDeclaration = {
+  name: 'sendEmail',
+  description: 'Send an email to Thach when a user wants to contact or hire him.',
+  parameters: {
+    type: SchemaType.OBJECT,
+    properties: {
+      visitorName: {
+        type: SchemaType.STRING,
+        description: 'The name of the visitor.',
+      },
+      contactInfo: {
+        type: SchemaType.STRING,
+        description: 'The visitor\'s email address or phone number.',
+      },
+      messageContent: {
+        type: SchemaType.STRING,
+        description: 'The content of the message they want to send to Thach.',
+      },
+    },
+    required: ['visitorName', 'contactInfo', 'messageContent'],
+  },
+};
 
 export async function POST(req: Request) {
   try {
@@ -12,26 +35,7 @@ export async function POST(req: Request) {
     const model = genAI.getGenerativeModel({
       model: 'gemini-2.5-flash',
       systemInstruction: CHAT_SYSTEM_PROMPT,
-      generationConfig: {
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: SchemaType.OBJECT,
-          properties: {
-            text: {
-              type: SchemaType.STRING,
-              description: 'Your short conversational text here',
-            },
-            widget: {
-              type: SchemaType.STRING,
-              description:
-                "Set to 'projects' if they ask about projects, 'skills' if they ask about skills/tech, 'contact' if they ask for contact/socials, 'about' if they ask about you generally. Default is 'none'.",
-              format: 'enum',
-              enum: ['none', 'projects', 'skills', 'contact', 'about'],
-            },
-          },
-          required: ['text', 'widget'],
-        },
-      },
+      tools: [{ functionDeclarations: [sendEmailFunction] }],
     });
 
     // Convert message history for Gemini, ensuring it starts with a 'user' message
@@ -54,8 +58,55 @@ export async function POST(req: Request) {
       lastMessage = lastMessage.substring(0, 1000);
     }
 
-    const result = await chat.sendMessage(lastMessage);
-    const response = await result.response;
+    let result = await chat.sendMessage(lastMessage);
+    let response = await result.response;
+
+    const functionCalls = response.functionCalls();
+    if (functionCalls && functionCalls.length > 0) {
+      const call = functionCalls[0];
+      if (call.name === 'sendEmail') {
+        const { visitorName, contactInfo, messageContent } = call.args as any;
+        
+        const resendKey = process.env.RESEND_API_KEY;
+        const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL;
+        
+        if (resendKey && receiverEmail) {
+          await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${resendKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              from: 'AI Assistant <onboarding@resend.dev>',
+              to: receiverEmail,
+              subject: `📩 New Contact from ${visitorName}`,
+              html: `
+                <div style="font-family: sans-serif; padding: 20px;">
+                  <h2>You have a new message from your Portfolio AI Assistant!</h2>
+                  <p><strong>Name:</strong> ${visitorName}</p>
+                  <p><strong>Contact:</strong> ${contactInfo}</p>
+                  <p><strong>Message:</strong></p>
+                  <blockquote style="background: #f3f4f6; padding: 15px; border-left: 4px solid #6366f1;">
+                    ${messageContent}
+                  </blockquote>
+                </div>
+              `,
+            }),
+          });
+        }
+
+        // Send function response back to Gemini to get the final text response
+        result = await chat.sendMessage([{
+          functionResponse: {
+            name: 'sendEmail',
+            response: { success: true }
+          }
+        }]);
+        response = await result.response;
+      }
+    }
+
     const text = response.text();
 
     return NextResponse.json({

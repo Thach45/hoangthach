@@ -128,7 +128,7 @@ export function WidgetAbout({ isEnglish }: WidgetProps) {
         <div>
           <h3 className="font-bold text-gray-900 dark:text-white">{isEnglish ? personalInfo.name.en : personalInfo.name.vi}</h3>
           <p className="text-brand text-xs font-medium mb-1">{isEnglish ? personalInfo.title.en : personalInfo.title.vi}</p>
-          <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-3">
+          <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
             {isEnglish ? personalInfo.bio.en : personalInfo.bio.vi}
           </p>
         </div>

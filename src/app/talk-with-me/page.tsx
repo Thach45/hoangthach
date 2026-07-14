@@ -8,6 +8,7 @@ import CursorGrid from '@/components/CursorGrid';
 import Header from '@/components/TalkWithMe/Header';
 import AvatarProfile from '@/components/TalkWithMe/AvatarProfile';
 import ChatMessages from '@/components/TalkWithMe/ChatMessages';
+import ShortcutWidgets from '@/components/TalkWithMe/ShortcutWidgets';
 import ChatInput from '@/components/TalkWithMe/ChatInput';
 
 interface ChatMessage {
@@ -61,17 +62,39 @@ export default function TalkWithMe() {
     }
   };
 
-  const handleCategoryClick = (category: string) => {
-    const questions: Record<string, string> = {
-      'Me': "Who are you and what do you do?",
-      'Projects': "Can you tell me about your recent projects?",
-      'Skills': "What are your main technical skills?",
-      'Fun': "Tell me a fun fact about yourself!",
-      'Contact': "How can I contact you?"
+  const handleShortcutClick = (category: string) => {
+    // These shortcut responses are handled purely offline without sending an API request (saves quota)
+    const shortcuts: Record<string, { q: string, a: string }> = {
+      'Me': { 
+        q: isEnglish ? "Who are you?" : "Bạn là ai?", 
+        a: JSON.stringify({ text: isEnglish ? "I'm Thạch, a Backend Developer. Here is some info about me!" : "Mình là Thạch, một Backend Developer đam mê công nghệ. Dưới đây là một số thông tin cơ bản về mình!", widget: "about" }) 
+      },
+      'Projects': { 
+        q: isEnglish ? "Show me your projects." : "Cho xem các dự án của bạn.", 
+        a: JSON.stringify({ text: isEnglish ? "Here are my featured projects. You can check the source code or view live demos!" : "Đây là các dự án nổi bật mình đã thực hiện. Bạn có thể xem mã nguồn hoặc demo trực tiếp!", widget: "projects" }) 
+      },
+      'Skills': { 
+        q: isEnglish ? "What are your skills?" : "Bạn biết dùng những công nghệ gì?", 
+        a: JSON.stringify({ text: isEnglish ? "I specialize in Backend, but also have knowledge in Frontend and DevOps. See details below:" : "Mình chuyên về Backend, nhưng cũng có kiến thức về Frontend và các công cụ DevOps. Chi tiết dưới đây:", widget: "skills" }) 
+      },
+      'Fun': { 
+        q: isEnglish ? "Tell me a fun fact." : "Kể chuyện vui đi.", 
+        a: JSON.stringify({ text: isEnglish ? "Fun fact: I once coded for 12 hours straight just to fix a bug caused by a missing comma. 💀" : "Một fact vui: Mình từng code liên tục 12 tiếng chỉ để fix một cái bug do thiếu dấu phẩy. 💀", widget: "none" }) 
+      },
+      'Contact': { 
+        q: isEnglish ? "How can I contact you?" : "Làm sao để liên hệ với bạn?", 
+        a: JSON.stringify({ text: isEnglish ? "I'd love to connect! You can reach me via the channels below." : "Rất vui được kết nối với bạn! Hãy liên hệ với mình qua các kênh dưới đây nhé.", widget: "contact" }) 
+      }
     };
     
-    if (questions[category]) {
-      sendMessage(questions[category]);
+    if (shortcuts[category]) {
+      const { q, a } = shortcuts[category];
+      // Instantly inject user message and static AI response to history
+      setHistory(prev => [
+        ...prev, 
+        { role: 'user', content: q },
+        { role: 'assistant', content: a }
+      ]);
     }
   };
 
@@ -145,6 +168,12 @@ export default function TalkWithMe() {
           hasHistory={history.length > 0} 
         />
 
+        <ShortcutWidgets 
+          isEnglish={isEnglish}
+          onShortcutClick={handleShortcutClick}
+          isTyping={isTyping}
+        />
+
         <ChatMessages 
           isEnglish={isEnglish}
           history={history}
@@ -158,7 +187,6 @@ export default function TalkWithMe() {
           setChatInput={setChatInput}
           isTyping={isTyping}
           sendMessage={sendMessage}
-          handleCategoryClick={handleCategoryClick}
         />
 
       </div>

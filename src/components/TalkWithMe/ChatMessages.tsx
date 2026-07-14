@@ -21,7 +21,9 @@ export default function ChatMessages({ isEnglish, history, isTyping, messagesEnd
   // Helper to safely parse AI response
   const parseResponse = (content: string) => {
     try {
-      const parsed = JSON.parse(content);
+      // Strip markdown code blocks if the model wrapped the JSON
+      const cleanContent = content.replace(/```json/gi, '').replace(/```/g, '').trim();
+      const parsed = JSON.parse(cleanContent);
       if (parsed.text && parsed.widget) {
         return parsed;
       }
