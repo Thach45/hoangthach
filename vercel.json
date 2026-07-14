@@ -3,10 +3,6 @@
     {
       "path": "/api/chat",
       "schedule": "40 14 * * *"
-    },
-    {
-      "path": "/api/cron/generate-quiz",
-      "schedule": "50 2 * * *"
     }
   ]
 }

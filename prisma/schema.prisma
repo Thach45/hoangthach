@@ -62,31 +62,3 @@ type Section {
   language String?          // For code-block (js, ts, python, etc.)
 }
 
-model QuizSet {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  topic       String
-  createdAt   DateTime   @default(now())
-  
-  questions   Question[]
-
-  @@map("quiz_sets")
-}
-
-model Question {
-  id            String     @id @default(auto()) @map("_id") @db.ObjectId
-  quizId        String     @db.ObjectId
-  quiz          QuizSet    @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  
-  content       String
-  options       QuizOption[]
-  correctOption String
-  explanation   String?
-  
-  @@map("questions")
-}
-
-type QuizOption {
-  id   String // "A", "B", "C", "D"
-  text String
-}

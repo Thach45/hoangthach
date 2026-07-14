@@ -1,22 +1,42 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 import { CHAT_SYSTEM_PROMPT } from '@/data/data';
 
 export const maxDuration = 60; // Allow up to 60 seconds for AI generation
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || "");
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '');
 
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.5-flash",
-      systemInstruction: CHAT_SYSTEM_PROMPT
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+      systemInstruction: CHAT_SYSTEM_PROMPT,
+      generationConfig: {
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: SchemaType.OBJECT,
+          properties: {
+            text: {
+              type: SchemaType.STRING,
+              description: 'Your short conversational text here',
+            },
+            widget: {
+              type: SchemaType.STRING,
+              description:
+                "Set to 'projects' if they ask about projects, 'skills' if they ask about skills/tech, 'contact' if they ask for contact/socials, 'about' if they ask about you generally. Default is 'none'.",
+              format: 'enum',
+              enum: ['none', 'projects', 'skills', 'contact', 'about'],
+            },
+          },
+          required: ['text', 'widget'],
+        },
+      },
     });
 
     // Convert message history for Gemini, ensuring it starts with a 'user' message
     const formattedHistory = messages.slice(0, -1).map((msg: any) => ({
-      role: msg.role === "user" ? "user" : "model",
+      role: msg.role === 'user' ? 'user' : 'model',
       parts: [{ text: msg.content }],
     }));
 
@@ -28,26 +48,35 @@ export async function POST(req: Request) {
       history: finalHistory,
     });
 
-    const lastMessage = messages[messages.length - 1].content;
+    // Anti-abuse: Limit the input length to 1000 characters (approx 200 words)
+    let lastMessage = messages[messages.length - 1].content;
+    if (lastMessage.length > 1000) {
+      lastMessage = lastMessage.substring(0, 1000);
+    }
+
     const result = await chat.sendMessage(lastMessage);
     const response = await result.response;
     const text = response.text();
 
     return NextResponse.json({
-      choices: [{
-        message: {
-          content: text
-        }
-      }]
+      choices: [
+        {
+          message: {
+            content: text,
+          },
+        },
+      ],
     });
   } catch (error) {
-    console.error("Gemini Chat Error:", error);
+    console.error('Gemini Chat Error:', error);
     return NextResponse.json({
-      choices: [{
-        message: {
-          content: "Oops! tôi đang bận một chút, bạn thử lại sau nhé! 😅"
-        }
-      }]
+      choices: [
+        {
+          message: {
+            content: 'Oops! tôi đang bận một chút, bạn thử lại sau nhé! 😅',
+          },
+        },
+      ],
     });
   }
 }
@@ -58,7 +87,7 @@ export async function GET(req: Request) {
     const authHeader = req.headers.get('authorization');
     const { searchParams } = new URL(req.url);
     const key = searchParams.get('key');
-    
+
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}` && key !== process.env.CRON_SECRET) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -68,7 +97,7 @@ export async function GET(req: Request) {
     const baseUrl = process.env.NEXTAUTH_URL;
 
     if (!baseUrl) {
-      throw new Error("NEXTAUTH_URL is not defined in environment variables");
+      throw new Error('NEXTAUTH_URL is not defined in environment variables');
     }
 
     const prompt = `You are a relatable technical mentor. Generate a viral, catchy, and highly practical blog post title for a backend developer portfolio. 
@@ -77,21 +106,21 @@ export async function GET(req: Request) {
     The topic MUST fall into one of these categories: [Technology, Backend, AI & ML, Algorithms, Programming Languages, System Design, Database, Career, Vibe Code, News].
     Output ONLY the title string, no quotes, no explanation.`;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const idea = response.text().trim();
 
     if (!idea) {
-      throw new Error("Failed to generate idea from Gemini");
+      throw new Error('Failed to generate idea from Gemini');
     }
 
     // Send Email via Resend
     const emailRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${resendKey}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${resendKey}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         from: 'AI Assistant <onboarding@resend.dev>',
@@ -113,13 +142,13 @@ export async function GET(req: Request) {
               This idea was generated by Gemini 2.5 Flash based on your "Practical Mentor" persona.
             </p>
           </div>
-        `
-      })
+        `,
+      }),
     });
 
     return NextResponse.json({ success: true, idea });
   } catch (error: any) {
-    console.error("Automation Error:", error);
+    console.error('Automation Error:', error);
     return NextResponse.json({ success: false, error: error.message });
   }
 }
