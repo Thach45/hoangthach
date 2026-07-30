@@ -1,205 +1,176 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI, SchemaType, FunctionDeclaration } from '@google/generative-ai';
+import OpenAI from 'openai';
+import { z } from 'zod';
 import { CHAT_SYSTEM_PROMPT } from '@/data/data';
+import { ChatMessageSchema, ChatResponseSchema } from '@/lib/chat';
 
-export const maxDuration = 60; // Allow up to 60 seconds for AI generation
+export const maxDuration = 60;
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '');
+const client = new OpenAI({
+  apiKey: process.env.DEEPSEEK_API_KEY || '',
+  baseURL: 'https://api.deepseek.com/v1',
+});
 
-const sendEmailFunction: FunctionDeclaration = {
-  name: 'sendEmail',
-  description: 'Send an email to Thach when a user wants to contact or hire him.',
-  parameters: {
-    type: SchemaType.OBJECT,
-    properties: {
-      visitorName: {
-        type: SchemaType.STRING,
-        description: 'The name of the visitor.',
-      },
-      contactInfo: {
-        type: SchemaType.STRING,
-        description: 'The visitor\'s email address or phone number.',
-      },
-      messageContent: {
-        type: SchemaType.STRING,
-        description: 'The content of the message they want to send to Thach.',
+const RequestSchema = z.object({
+  messages: z.array(ChatMessageSchema).min(1).max(8),
+});
+
+const tools = [
+  {
+    type: 'function',
+    function: {
+      name: 'sendEmail',
+      description: 'Send an email to Thach when a visitor wants to contact or hire him.',
+      parameters: {
+        type: 'object',
+        properties: {
+          visitorName: { type: 'string' },
+          contactInfo: { type: 'string' },
+          messageContent: { type: 'string' },
+        },
+        required: ['visitorName', 'contactInfo', 'messageContent'],
       },
     },
-    required: ['visitorName', 'contactInfo', 'messageContent'],
   },
-};
+  {
+    type: 'function',
+    function: {
+      name: 'searchMusic',
+      description: 'Search iTunes for songs and their preview links when a user asks about music.',
+      parameters: {
+        type: 'object',
+        properties: { query: { type: 'string' } },
+        required: ['query'],
+      },
+    },
+  },
+] as const;
 
-export async function POST(req: Request) {
+const fallback = (text: string) => JSON.stringify({ text, widget: 'none' });
+
+function escapeHtml(value: string) {
+  return value.replace(/[&<>'"]/g, (character) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;',
+  })[character] || character);
+}
+
+function normalizeModelResponse(content: string | null) {
+  if (!content) return fallback('Oops! hệ thống đang bận một chút, bạn thử lại sau nhé! 😅');
+
   try {
-    const { messages } = await req.json();
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
-      systemInstruction: CHAT_SYSTEM_PROMPT,
-      tools: [{ functionDeclarations: [sendEmailFunction] }],
-    });
+    const cleaned = content.replace(/```json/gi, '').replace(/```/g, '').trim();
+    const parsed = ChatResponseSchema.safeParse(JSON.parse(cleaned));
+    if (parsed.success) return JSON.stringify(parsed.data);
+  } catch {
+    // Return a safe, user-facing fallback instead of passing malformed model output to the client.
+  }
 
-    // Convert message history for Gemini, ensuring it starts with a 'user' message
-    const formattedHistory = messages.slice(0, -1).map((msg: any) => ({
-      role: msg.role === 'user' ? 'user' : 'model',
-      parts: [{ text: msg.content }],
-    }));
+  return fallback('Mình vừa bị một con JSON bug chặn đường, thử nhắn lại nhé! 💀');
+}
 
-    // Gemini requires the first message in history to be from the 'user'
-    const firstUserIndex = formattedHistory.findIndex((m: any) => m.role === 'user');
-    const finalHistory = firstUserIndex !== -1 ? formattedHistory.slice(firstUserIndex) : [];
-
-    const chat = model.startChat({
-      history: finalHistory,
-    });
-
-    // Anti-abuse: Limit the input length to 1000 characters (approx 200 words)
-    let lastMessage = messages[messages.length - 1].content;
-    if (lastMessage.length > 1000) {
-      lastMessage = lastMessage.substring(0, 1000);
-    }
-
-    let result = await chat.sendMessage(lastMessage);
-    let response = await result.response;
-
-    const functionCalls = response.functionCalls();
-    if (functionCalls && functionCalls.length > 0) {
-      const call = functionCalls[0];
-      if (call.name === 'sendEmail') {
-        const { visitorName, contactInfo, messageContent } = call.args as any;
-        
-        const resendKey = process.env.RESEND_API_KEY;
-        const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL;
-        
-        if (resendKey && receiverEmail) {
-          await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${resendKey}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              from: 'AI Assistant <onboarding@resend.dev>',
-              to: receiverEmail,
-              subject: `📩 New Contact from ${visitorName}`,
-              html: `
-                <div style="font-family: sans-serif; padding: 20px;">
-                  <h2>You have a new message from your Portfolio AI Assistant!</h2>
-                  <p><strong>Name:</strong> ${visitorName}</p>
-                  <p><strong>Contact:</strong> ${contactInfo}</p>
-                  <p><strong>Message:</strong></p>
-                  <blockquote style="background: #f3f4f6; padding: 15px; border-left: 4px solid #6366f1;">
-                    ${messageContent}
-                  </blockquote>
-                </div>
-              `,
-            }),
-          });
-        }
-
-        // Send function response back to Gemini to get the final text response
-        result = await chat.sendMessage([{
-          functionResponse: {
-            name: 'sendEmail',
-            response: { success: true }
-          }
-        }]);
-        response = await result.response;
-      }
-    }
-
-    const text = response.text();
-
-    return NextResponse.json({
-      choices: [
-        {
-          message: {
-            content: text,
-          },
-        },
-      ],
-    });
-  } catch (error) {
-    console.error('Gemini Chat Error:', error);
-    return NextResponse.json({
-      choices: [
-        {
-          message: {
-            content: 'Oops! tôi đang bận một chút, bạn thử lại sau nhé! 😅',
-          },
-        },
-      ],
-    });
+function parseToolArguments<T extends z.ZodTypeAny>(argumentsJson: string, schema: T) {
+  try {
+    return schema.safeParse(JSON.parse(argumentsJson));
+  } catch {
+    return { success: false } as const;
   }
 }
 
-// AUTOMATION: Generate Blog Idea via Cron Job
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   try {
-    const authHeader = req.headers.get('authorization');
-    const { searchParams } = new URL(req.url);
-    const key = searchParams.get('key');
+    const body = RequestSchema.safeParse(await req.json());
+    if (!body.success) return NextResponse.json({ choices: [] }, { status: 400 });
 
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}` && key !== process.env.CRON_SECRET) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const formattedHistory = body.data.messages.map((message) => ({
+      role: message.role === 'user' ? 'user' : 'assistant',
+      content: message.content,
+    }));
+    const latest = formattedHistory.at(-1);
+    if (latest) latest.content = latest.content.slice(0, 1000);
+
+    const openAiMessages: Array<Record<string, unknown>> = [
+      { role: 'system', content: CHAT_SYSTEM_PROMPT },
+      ...formattedHistory,
+    ];
+    let finalResponse: string | null = null;
+
+    for (let attempts = 0; attempts < 3; attempts += 1) {
+      const response = await client.chat.completions.create({
+        model: 'deepseek-chat',
+        messages: openAiMessages as never,
+        tools: tools as never,
+        response_format: { type: 'json_object' },
+      });
+      const responseMessage = response.choices[0]?.message;
+      if (!responseMessage) break;
+
+      openAiMessages.push(responseMessage as unknown as Record<string, unknown>);
+      if (!responseMessage.tool_calls?.length) {
+        finalResponse = normalizeModelResponse(responseMessage.content);
+        break;
+      }
+
+      for (const toolCall of responseMessage.tool_calls) {
+        const functionCall = 'function' in toolCall ? toolCall.function : null;
+        if (!functionCall) continue;
+
+        if (functionCall.name === 'searchMusic') {
+          const args = parseToolArguments(functionCall.arguments, z.object({ query: z.string().min(1).max(120) }));
+          if (!args.success) continue;
+
+          try {
+            const itunesResponse = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(args.data.query)}&entity=song&limit=5`);
+            const itunesData = await itunesResponse.json();
+            const tracks = Array.isArray(itunesData.results)
+              ? itunesData.results
+                  .filter((item: { previewUrl?: unknown }) => typeof item.previewUrl === 'string')
+                  .map((item: { trackName?: string; artistName?: string; artworkUrl100?: string; previewUrl: string }) => ({
+                    title: item.trackName || 'Unknown track',
+                    artist: item.artistName || 'Unknown artist',
+                    artwork: item.artworkUrl100 ? item.artworkUrl100.replace('100x100bb', '600x600bb') : '',
+                    url: item.previewUrl,
+                  }))
+              : [];
+            openAiMessages.push({ role: 'tool', tool_call_id: toolCall.id, content: JSON.stringify({ success: true, tracks }) });
+          } catch {
+            openAiMessages.push({ role: 'tool', tool_call_id: toolCall.id, content: JSON.stringify({ success: false, tracks: [] }) });
+          }
+        }
+
+        if (functionCall.name === 'sendEmail') {
+          const args = parseToolArguments(functionCall.arguments, z.object({
+            visitorName: z.string().min(1).max(120),
+            contactInfo: z.string().min(3).max(200),
+            messageContent: z.string().min(1).max(3000),
+          }));
+
+          let sent = false;
+          if (args.success && process.env.RESEND_API_KEY && process.env.CONTACT_RECEIVER_EMAIL) {
+            const { visitorName, contactInfo, messageContent } = args.data;
+            const emailResponse = await fetch('https://api.resend.com/emails', {
+              method: 'POST',
+              headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                from: 'AI Assistant <onboarding@resend.dev>',
+                to: process.env.CONTACT_RECEIVER_EMAIL,
+                subject: `New contact from ${visitorName}`,
+                html: `<div><h2>New portfolio message</h2><p><strong>Name:</strong> ${escapeHtml(visitorName)}</p><p><strong>Contact:</strong> ${escapeHtml(contactInfo)}</p><p><strong>Message:</strong></p><blockquote>${escapeHtml(messageContent).replace(/\n/g, '<br/>')}</blockquote></div>`,
+              }),
+            });
+            sent = emailResponse.ok;
+          }
+          openAiMessages.push({ role: 'tool', tool_call_id: toolCall.id, content: JSON.stringify({ success: sent }) });
+        }
+      }
     }
 
-    const resendKey = process.env.RESEND_API_KEY;
-    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL;
-    const baseUrl = process.env.NEXTAUTH_URL;
-
-    if (!baseUrl) {
-      throw new Error('NEXTAUTH_URL is not defined in environment variables');
-    }
-
-    const prompt = `You are a relatable technical mentor. Generate a viral, catchy, and highly practical blog post title for a backend developer portfolio. 
-    The topic should be at a Senior level or below, focusing on common pitfalls, subtle optimizations, or "underrated" best practices that developers often overlook in their day-to-day work. 
-    Avoid overly complex architectural topics or high-level academic system design. Think about "hidden gems" or "things I wish I knew earlier" type of content.
-    The topic MUST fall into one of these categories: [Technology, Backend, AI & ML, Algorithms, Programming Languages, System Design, Database, Career, Vibe Code, News].
-    Output ONLY the title string, no quotes, no explanation.`;
-
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const idea = response.text().trim();
-
-    if (!idea) {
-      throw new Error('Failed to generate idea from Gemini');
-    }
-
-    // Send Email via Resend
-    const emailRes = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${resendKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'AI Assistant <onboarding@resend.dev>',
-        to: receiverEmail,
-        subject: `✨ New Blog Idea: ${idea}`,
-        html: `
-          <div style="font-family: sans-serif; padding: 20px; color: #111;">
-            <h2 style="color: #6366f1;">New AI-Powered Blog Idea</h2>
-            <p>I've brainstormed a new topic for your portfolio:</p>
-            <div style="background: #f3f4f6; padding: 15px; border-radius: 10px; font-size: 1.2em; font-weight: bold; margin: 20px 0;">
-              ${idea}
-            </div>
-            <p>Ready to turn this into a full article?</p>
-            <a href="${baseUrl}/api/blog/automate?key=${process.env.CRON_SECRET}&idea=${encodeURIComponent(idea)}" 
-               style="display: inline-block; background: #6366f1; color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-              🚀 Publish Now
-            </a>
-            <p style="color: #666; font-size: 0.8em; margin-top: 30px;">
-              This idea was generated by Gemini 2.5 Flash based on your "Practical Mentor" persona.
-            </p>
-          </div>
-        `,
-      }),
-    });
-
-    return NextResponse.json({ success: true, idea });
-  } catch (error: any) {
-    console.error('Automation Error:', error);
-    return NextResponse.json({ success: false, error: error.message });
+    return NextResponse.json({ choices: [{ message: { content: finalResponse || fallback('Oops! hệ thống đang bận...') } }] });
+  } catch (error) {
+    console.error('Chat request failed:', error instanceof Error ? error.message : 'Unknown error');
+    return NextResponse.json({ choices: [{ message: { content: fallback('Oops! tôi đang bận một chút, bạn thử lại sau nhé! 😅') } }] });
   }
 }

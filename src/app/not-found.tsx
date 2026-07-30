@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
-const StarsCanvas = dynamic(() => import('../components/canvas/Stars'), { ssr: false });
+const StarsCanvas = dynamic(() => import('../components/visuals/canvas/Stars'), { ssr: false });
 
 export default function NotFound() {
   return (

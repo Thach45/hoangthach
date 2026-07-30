@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '@/context/LanguageContext';
 
-import { navItems, personalInfo } from '../data/data';
+import { navItems, personalInfo } from '@/data/data';
 
 const socialLinks = [
   {

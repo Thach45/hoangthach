@@ -1,12 +1,10 @@
 'use client';
 import Link from 'next/link';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
-
-
-import { personalInfo, skills } from '../data/data';
+import { personalInfo, skills } from '@/data/data';
 
 export default function About() {
   const { isEnglish } = useLanguage();
@@ -79,7 +77,7 @@ export default function About() {
                 </Link>
                 
                 <Link 
-                  href="/talk-with-me" 
+                  href="/" 
                   className="px-6 py-3 border-2 border-brand text-brand rounded-full hover:bg-brand hover:text-white transition-all font-bold flex items-center gap-2 group"
                 >
                   <span className="relative flex h-3 w-3">

@@ -5,20 +5,23 @@ import { useLanguage } from '@/context/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useState, useMemo, useEffect, useRef } from 'react';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
-import Layout from '@/components/Layout';
-import ProjectModal from '@/components/ProjectModal';
+import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
+import Layout from '@/components/layout/Layout';
+import ProjectModal from '@/components/sections/ProjectModal';
 import dynamic from 'next/dynamic';
 import { Project } from '@/types/project';
 import { FaGithub, FaExternalLinkAlt, FaSearch } from 'react-icons/fa';
+import { LayoutGrid, Milestone } from 'lucide-react';
+import ProjectTimelineView from '@/components/sections/ProjectTimelineView';
 
-const StarsCanvas = dynamic(() => import('@/components/canvas/Stars'), { ssr: false });
+const StarsCanvas = dynamic(() => import('@/components/visuals/canvas/Stars'), { ssr: false });
 
 export default function ProjectsPage() {
   const { isEnglish } = useLanguage();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [filter, setFilter] = useState('all');
+  const [viewMode, setViewMode] = useState<'grid' | 'timeline'>('grid');
   
   const planetsRef = useRef<HTMLDivElement | null>(null);
   const starsRef = useRef<HTMLDivElement | null>(null);
@@ -95,8 +98,9 @@ export default function ProjectsPage() {
             </motion.p>
           </header>
 
-          {/* Filter Bar (Search removed) */}
-          <div className="flex justify-center mb-16 max-w-4xl mx-auto">
+          {/* Filter Bar & View Switcher */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-16 max-w-5xl mx-auto">
+            {/* Category Filter */}
             <div className="flex flex-wrap items-center justify-center gap-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem] px-6 py-3">
               {categories.map((cat) => (
                 <button
@@ -112,25 +116,61 @@ export default function ProjectsPage() {
                 </button>
               ))}
             </div>
+
+            {/* View Switcher Toggle */}
+            <div className="flex items-center gap-1.5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-1.5">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase transition-all duration-300 ${
+                  viewMode === 'grid'
+                    ? 'bg-brand border-brand text-white shadow-lg shadow-brand/40 scale-105'
+                    : 'bg-white/5 border-white/10 text-gray-400 hover:border-brand/50 hover:text-white'
+                }`}
+                title={isEnglish ? 'Grid View' : 'Dạng lưới'}
+              >
+                <LayoutGrid className="w-4 h-4" />
+                <span>{isEnglish ? 'Grid' : 'Lưới'}</span>
+              </button>
+              <button
+                onClick={() => setViewMode('timeline')}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase transition-all duration-300 ${
+                  viewMode === 'timeline'
+                    ? 'bg-brand border-brand text-white shadow-lg shadow-brand/40 scale-105'
+                    : 'bg-white/5 border-white/10 text-gray-400 hover:border-brand/50 hover:text-white'
+                }`}
+                title={isEnglish ? 'Timeline View' : 'Dòng thời gian'}
+              >
+                <Milestone className="w-4 h-4" />
+                <span>{isEnglish ? 'Timeline' : 'Lộ trình'}</span>
+              </button>
+            </div>
           </div>
 
-          {/* Projects Grid with Restored Original Card Layout */}
-          <motion.div 
-            layout
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            <AnimatePresence mode="popLayout">
-              {filteredProjects.map((project, idx) => (
-                <ProjectCard 
-                  key={project.id} 
-                  project={project} 
-                  idx={idx} 
-                  isEnglish={isEnglish}
-                  onClick={() => setSelectedProject(project)}
-                />
-              ))}
-            </AnimatePresence>
-          </motion.div>
+          {/* Projects Content: Grid or Timeline */}
+          {viewMode === 'grid' ? (
+            <motion.div 
+              layout
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+              <AnimatePresence mode="popLayout">
+                {filteredProjects.map((project, idx) => (
+                  <ProjectCard 
+                    key={project.id} 
+                    project={project} 
+                    idx={idx} 
+                    isEnglish={isEnglish}
+                    onClick={() => setSelectedProject(project)}
+                  />
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          ) : (
+            <ProjectTimelineView
+              projects={filteredProjects}
+              isEnglish={isEnglish}
+              onProjectClick={setSelectedProject}
+            />
+          )}
 
           {filteredProjects.length === 0 && (
             <div className="text-center py-32">

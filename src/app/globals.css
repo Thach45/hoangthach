@@ -129,6 +129,24 @@
   z-index: -1;
 }
 
+.mouse-ripple {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1px solid hsl(var(--brand) / 0.75);
+  border-radius: 9999px;
+  box-shadow: 0 0 18px hsl(var(--brand) / 0.4);
+  transform: translate(-50%, -50%) scale(0.4);
+  animation: mouse-ripple 650ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes mouse-ripple {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(5);
+  }
+}
+
 /* Navigation Blur */
 .nav-blur {
   backdrop-filter: blur(8px);

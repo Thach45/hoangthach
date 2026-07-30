@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '@/context/LanguageContext';
 import Aos from 'aos';
 import { motion } from "framer-motion";
 import dynamic from 'next/dynamic';
 
-const EarthCanvas = dynamic(() => import('./canvas/Earth'), { ssr: false });
+const EarthCanvas = dynamic(() => import('@/components/visuals/canvas/Earth'), { ssr: false });
 
-import { personalInfo } from '../data/data';
+import { personalInfo } from '@/data/data';
 
 
 import { useState } from 'react';

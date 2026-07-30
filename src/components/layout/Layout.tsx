@@ -1,10 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { LanguageProvider } from '../context/LanguageContext';
-import { DarkModeProvider } from '../context/DarkModeContext';
 import PreLoader from './PreLoader';
-import ScrollToTop from './ScrollToTop';
+import ScrollToTop from '@/components/ui/ScrollToTop';
 import AOS from 'aos';
 interface LayoutProps {
   children: React.ReactNode;

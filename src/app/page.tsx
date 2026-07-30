@@ -1,136 +1,228 @@
 'use client';
 
-import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
-import Layout from '../components/Layout';
-import Navigation from '../components/Navigation';
-import Hero from '../components/Hero';
-import About from '../components/About';
-import Skills from '../components/Skills';
-import PersonalImprints from '@/components/PersonalImprints';
-import Projects from '../components/Projects';
-import Contact from '../components/Contact';
-import Footer from '../components/Footer';
-import FixedContactBar from '../components/FixedContactBar';
+import { useCallback, useRef, useState } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
+import { useDarkMode } from '@/context/DarkModeContext';
+import StarsCanvas from '@/components/visuals/canvas/Stars';
+import CursorGrid from '@/components/ui/CursorGrid';
+import Header from '@/components/features/talk-with-me/Header';
+import AvatarProfile from '@/components/features/talk-with-me/AvatarProfile';
+import ChatMessages from '@/components/features/talk-with-me/ChatMessages';
+import ShortcutWidgets from '@/components/features/talk-with-me/ShortcutWidgets';
+import ChatInput from '@/components/features/talk-with-me/ChatInput';
+import MouseEffects from '@/components/ui/MouseEffects';
+import MessagesWallBackground from '@/components/features/talk-with-me/MessagesWallBackground';
+import type { MusicTrack, VisitorMessage } from '@/lib/chat';
 
-import { AnimatePresence } from 'framer-motion';
-import ScrollSection from '../components/ScrollSection';
+interface ChatMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+}
 
-export default function Home() {
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const tickingRef = useRef(false);
-  const planetsRef = useRef<HTMLDivElement | null>(null);
-  const starsRef = useRef<HTMLDivElement | null>(null);
-  const mountainsRef = useRef<HTMLDivElement | null>(null);
-  const rocketRef = useRef<HTMLDivElement | null>(null);
+export default function TalkWithMe() {
+  const { isEnglish, toggleLanguage } = useLanguage();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
+  const [chatInput, setChatInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [history, setHistory] = useState<ChatMessage[]>([]);
+  const [nowPlaying, setNowPlaying] = useState<MusicTrack | null>(null);
+  const [isVisitorWallActive, setIsVisitorWallActive] = useState(false);
+  const [visitorMessages, setVisitorMessages] = useState<VisitorMessage[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const updateReduced = () => setReducedMotion(mq.matches);
-    updateReduced();
-    mq.addEventListener?.('change', updateReduced);
+  const handleVisitorWallChange = useCallback((active: boolean, messages?: VisitorMessage[]) => {
+    setIsVisitorWallActive(active);
+    if (messages) setVisitorMessages(messages);
+  }, []);
 
-    const updateParallax = () => {
-      tickingRef.current = false;
-      if (reducedMotion) return;
-      const y = window.scrollY;
-      if (planetsRef.current) planetsRef.current.style.transform = `translate3d(0, ${y * 0.5}px, 0)`;
-      if (starsRef.current) starsRef.current.style.transform = `translate3d(0, ${y * 0.3}px, 0)`;
-      if (mountainsRef.current) mountainsRef.current.style.transform = `translate3d(0, ${y * 0.1}px, 0)`;
-      if (rocketRef.current) {
-        const x = y * 1;     
-        const yMove = y * 1; 
-        const z = y * 0.4;
-        const size =y * 0.02 + 0
-      
-        rocketRef.current.style.transform = `translate3d(${x}px, ${yMove}px, ${z}px) scale(${size}) rotate(135deg)`;
+  const sendMessage = async (text: string = chatInput) => {
+    if (!text.trim() || isTyping) return;
+
+    const userMessage: ChatMessage = { role: 'user', content: text };
+    setHistory(prev => [...prev, userMessage]);
+    setChatInput('');
+    setIsTyping(true);
+
+    try {
+      // Use sliding window to keep only the last 8 messages (saving tokens & context limit)
+      const messages = [
+        ...history,
+        userMessage
+      ].slice(-8);
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages }),
+      });
+
+      const data = await response.json();
+
+      if (data.choices && data.choices[0]?.message?.content) {
+        const content = data.choices[0].message.content;
+        
+        const assistantMessage: ChatMessage = { role: 'assistant', content };
+        setHistory(prev => [...prev, assistantMessage]);
+      } else {
+        throw new Error('Invalid response');
+      }
+    } catch (error) {
+      console.error('Chat error:', error);
+      setHistory(prev => [...prev, { role: 'assistant', content: "Sorry, I'm having trouble connecting right now." }]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  const handleShortcutClick = (category: string) => {
+    // These shortcut responses are handled purely offline without sending an API request (saves quota)
+    const shortcuts: Record<string, { q: string, a: string }> = {
+      'Me': { 
+        q: isEnglish ? "Who are you?" : "Bạn là ai?", 
+        a: JSON.stringify({ text: isEnglish ? "I'm Thạch, a Backend Developer. Here is some info about me!" : "Mình là Thạch, một Backend Developer đam mê công nghệ. Dưới đây là một số thông tin cơ bản về mình!", widget: "about" }) 
+      },
+      'CV': {
+        q: isEnglish ? 'Show me your CV.' : 'Cho mình xem CV.',
+        a: JSON.stringify({ text: isEnglish ? 'Here are the two versions of my resume.' : 'Đây là hai phiên bản CV của mình nhé.', widget: 'cv' })
+      },
+      'Projects': { 
+        q: isEnglish ? "Show me your projects." : "Cho xem các dự án của bạn.", 
+        a: JSON.stringify({ text: isEnglish ? "Here are my featured projects. You can check the source code or view live demos!" : "Đây là các dự án nổi bật mình đã thực hiện. Bạn có thể xem mã nguồn hoặc demo trực tiếp!", widget: "projects" }) 
+      },
+      'Skills': { 
+        q: isEnglish ? "What are your skills?" : "Bạn biết dùng những công nghệ gì?", 
+        a: JSON.stringify({ text: isEnglish ? "I specialize in Backend, but also have knowledge in Frontend and DevOps. See details below:" : "Mình chuyên về Backend, nhưng cũng có kiến thức về Frontend và các công cụ DevOps. Chi tiết dưới đây:", widget: "skills" }) 
+      },
+      'Fun': { 
+        q: isEnglish ? "Tell me a fun fact." : "Kể chuyện vui đi.", 
+        a: JSON.stringify({ text: isEnglish ? "Here is a tiny dev confession. 💀" : "Một dev confession nho nhỏ đây. 💀", widget: "funFact" }) 
+      },
+      'Experience': {
+        q: isEnglish ? 'Show me your learning journey.' : 'Cho mình xem hành trình học tập của bạn.',
+        a: JSON.stringify({ text: isEnglish ? 'This is the route from foundations to shipping AI products.' : 'Đây là hành trình từ nền tảng đến lúc build sản phẩm AI.', widget: 'experience' })
+      },
+      'Messages': {
+        q: isEnglish ? 'Show me the visitor message wall.' : 'Cho mình xem bức tường lời nhắn nhủ.',
+        a: JSON.stringify({ text: isEnglish ? 'Here are the kind notes visitors have left behind.' : 'Đây là những lời nhắn tử tế mọi người đã để lại.', widget: 'visitorMessages' })
+      },
+      'Contact': { 
+        q: isEnglish ? "How can I contact you?" : "Làm sao để liên hệ với bạn?", 
+        a: JSON.stringify({ text: isEnglish ? "I'd love to connect! You can reach me via the channels below." : "Rất vui được kết nối với bạn! Hãy liên hệ với mình qua các kênh dưới đây nhé. Hoặc bạn để lại Tên, Email, SDT, và nội dung. Mình sẽ liên hệ lại với bạn sớm nhất.", widget: "contact" }) 
       }
     };
-
-    const onScroll = () => {
-      if (tickingRef.current) return;
-      tickingRef.current = true;
-      requestAnimationFrame(updateParallax);
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    // Initial apply
-    requestAnimationFrame(updateParallax);
-
-    return () => {
-      window.removeEventListener('scroll', onScroll as EventListener);
-      mq.removeEventListener?.('change', updateReduced);
-    };
-  }, [reducedMotion]);
+    
+    if (shortcuts[category]) {
+      const { q, a } = shortcuts[category];
+      // Instantly inject user message and static AI response to history
+      setHistory(prev => [
+        ...prev, 
+        { role: 'user', content: q },
+        { role: 'assistant', content: a }
+      ]);
+    }
+  };
 
   return (
-    <Layout>
-      <Navigation />
-      <AnimatePresence>
-        <div className="parallax-container">
-          <div className="absolute inset-0" ref={planetsRef} style={reducedMotion ? { transform: 'none' } : undefined}>
-            <Image
-              src="/asset/planets.png"
-              alt="planets"
-              fill
-              sizes="100vw"
-              className="plants object-cover"
-              priority
+    <div className={`h-screen w-full text-gray-900 dark:text-white relative overflow-hidden flex flex-col font-sans transition-colors duration-300 ${isVisitorWallActive ? 'bg-[#49392f]' : 'bg-gray-50 dark:bg-[#0b080c]'}`}>
+      <MouseEffects />
+      
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(156, 163, 175, 0.5);
+          border-radius: 10px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .mask-edges {
+          mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+          -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+        .mask-vertical {
+          mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+          -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+        }
+      `}</style>
+
+      {isVisitorWallActive ? (
+        <MessagesWallBackground messages={visitorMessages} onClose={() => setIsVisitorWallActive(false)} />
+      ) : (
+        <>
+          <div className="absolute inset-0 z-0 opacity-50 dark:opacity-30 pointer-events-none">
+            <CursorGrid 
+              color={isDarkMode ? "#a855f7" : "#d946ef"} 
+              gridOpacity={0.03}
+              fillOpacity={0.05}
             />
           </div>
-          <div className="absolute inset-0" ref={starsRef} style={reducedMotion ? { transform: 'none' } : undefined}>
-            <Image
-              src="/asset/stars.png"
-              alt="stars"
-              fill
-              sizes="100vw"
-              className="stars object-cover"
-            />
+          <div className={`absolute inset-0 z-0 pointer-events-none transition-opacity duration-500 ${isDarkMode ? 'opacity-100' : 'opacity-0'}`}>
+            <StarsCanvas />
           </div>
-          <div className="absolute inset-0" ref={mountainsRef} style={reducedMotion ? { transform: 'none' } : undefined}>
-            <Image
-              src="/asset/mountains.png"
-              alt="mountains"
-              fill
-              sizes="100vw"
-              className="mountains object-cover"
-            />
-          </div>
-          <div className="absolute w-[80px] sm:w-[100px] z-20 h-[80px] sm:h-[100px] left-0 top-[20%] hidden md:block" ref={rocketRef} style={reducedMotion ? { transform: 'none' } : undefined}>
-            <Image
-              src="/asset/rocket.png"
-              alt="rocket"
-              fill
-              sizes="100vw"
-              className="rocket object-cover"
-            />
-          </div>
-          <Hero />
-        </div>
+        </>
+      )}
 
-        <ScrollSection>
-          <About />
-        </ScrollSection>
+      <Header 
+        isEnglish={isEnglish}
+        isDarkMode={isDarkMode}
+        toggleLanguage={toggleLanguage}
+        toggleDarkMode={toggleDarkMode}
+        nowPlaying={nowPlaying || undefined}
+        onSongEnd={() => setNowPlaying(null)}
+      />
 
-        <ScrollSection>
-          <Skills />
-        </ScrollSection>
+      {/* Background Giant Text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0 opacity-5">
+        <h1 className="text-[15vw] font-black uppercase whitespace-nowrap tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-gray-400 dark:from-white to-transparent">
+          THACH HOANG
+        </h1>
+      </div>
 
-        {/* <ScrollSection>
-          <PersonalImprints variant="preview" />
-        </ScrollSection> */}
+      {/* Main UI Container - Fixed Layout */}
+      <div className="flex-1 flex flex-col w-full relative z-10 overflow-hidden items-center pt-6 pb-4">
+        
+        <AvatarProfile 
+          isEnglish={isEnglish} 
+          hasHistory={history.length > 0} 
+        />
 
-        <ScrollSection>
-          <Projects />
-        </ScrollSection>
+        <ChatMessages 
+          isEnglish={isEnglish}
+          history={history}
+          isTyping={isTyping}
+          messagesEndRef={messagesEndRef}
+          onSendMessage={sendMessage}
+          onSelectMusic={(track) => setNowPlaying(track)}
+          onVisitorWallChange={handleVisitorWallChange}
+        />
 
-        <ScrollSection>
-          <Contact />
-        </ScrollSection>
+        <ChatInput 
+          isEnglish={isEnglish}
+          chatInput={chatInput}
+          setChatInput={setChatInput}
+          isTyping={isTyping}
+          sendMessage={sendMessage}
+        />
 
-        <Footer />
-        <FixedContactBar />
-      </AnimatePresence>
-    </Layout>
+        <ShortcutWidgets 
+          isEnglish={isEnglish}
+          onShortcutClick={handleShortcutClick}
+          isTyping={isTyping}
+        />
+
+      </div>
+    </div>
   );
 }

@@ -1,14 +1,14 @@
 'use client';
 
-import { useLanguage } from '../context/LanguageContext';
-import { Project } from '../types/project';
+import { useLanguage } from '@/context/LanguageContext';
+import { Project } from '@/types/project';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose } from 'react-icons/io5';
 import { FaGithub, FaShare, FaPlay, FaPause, FaExternalLinkAlt } from 'react-icons/fa';
 import { useEffect, useMemo, useState, useRef } from 'react';
-import LoadingSpinner from './LoadingSpinner';
-import { useToast } from './Toast';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { useToast } from '@/components/ui/Toast';
 
 interface ProjectModalProps {
   project: Project;

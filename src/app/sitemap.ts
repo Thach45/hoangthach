@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${baseUrl}/talk-with-me`,
+      url: `${baseUrl}/dont-kill-my-vibe`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,

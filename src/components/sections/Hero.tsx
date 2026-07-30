@@ -2,15 +2,15 @@
 
 import Link from 'next/link';
 import { useRef } from 'react';
-import { useLanguage } from '../context/LanguageContext';
-import { useAnimations } from '../hooks/useAnimations';
+import { useLanguage } from '@/context/LanguageContext';
+import { useAnimations } from '@/hooks/useAnimations';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 
-const TicofabCanvas = dynamic(() => import('./canvas/Tico'), { ssr: false });
-const StarsCanvas = dynamic(() => import('./canvas/Stars'), { ssr: false });
+const TicofabCanvas = dynamic(() => import('@/components/visuals/canvas/Tico'), { ssr: false });
+const StarsCanvas = dynamic(() => import('@/components/visuals/canvas/Stars'), { ssr: false });
 
-import { personalInfo, heroText } from '../data/data';
+import { personalInfo, heroText } from '@/data/data';
 
 export default function Hero() {
   const { isEnglish } = useLanguage();

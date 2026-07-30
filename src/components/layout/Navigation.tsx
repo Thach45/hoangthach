@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useLanguage } from '../context/LanguageContext';
-import { useDarkMode } from '../context/DarkModeContext';
+import { useLanguage } from '@/context/LanguageContext';
+import { useDarkMode } from '@/context/DarkModeContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { navItems, personalInfo } from '../data/data';
+import { navItems, personalInfo } from '@/data/data';
 
 export default function Navigation() {
   const { isEnglish, toggleLanguage } = useLanguage();

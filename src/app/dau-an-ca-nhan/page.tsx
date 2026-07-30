@@ -1,9 +1,9 @@
 'use client';
 
-import Layout from '@/components/Layout';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
-import PersonalImprints from '@/components/PersonalImprints';
+import Layout from '@/components/layout/Layout';
+import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
+import PersonalImprints from '@/components/sections/PersonalImprints';
 
 export default function PersonalImprintsPage() {
   return (

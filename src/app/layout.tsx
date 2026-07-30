@@ -1,7 +1,7 @@
 import './globals.css'
 import Script from 'next/script'
 import { Metadata } from 'next'
-import ErrorBoundary from '@/components/ErrorBoundary'
+import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import { siteConfig } from '@/config'
 import Providers from '@/providers/Providers'
 import { Analytics } from "@vercel/analytics/react"

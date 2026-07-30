@@ -35,4 +35,16 @@ export interface Project {
     en: string[];
     vi: string[];
   };
+  team?: {
+    en: string;
+    vi: string;
+  };
+  lessons?: {
+    en: string[];
+    vi: string[];
+  };
+  experience?: {
+    en: string;
+    vi: string;
+  };
 }
