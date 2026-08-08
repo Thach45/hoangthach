@@ -6,6 +6,34 @@ import { ChatMessageSchema, ChatResponseSchema } from '@/lib/chat';
 
 export const maxDuration = 60;
 
+const RATE_LIMIT_WINDOW = 24 * 60 * 60 * 1000; // 1 ngày
+const MAX_REQUESTS = 10; // Tối đa 10 câu hỏi / 1 ngày
+const MAX_MESSAGE_LENGTH = 500; // Giới hạn 500 ký tự (khoảng 100 từ) cho mỗi tin nhắn mới
+
+const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+  
+  if (!record) {
+    rateLimitMap.set(ip, { count: 1, timestamp: now });
+    return true;
+  }
+  
+  if (now - record.timestamp > RATE_LIMIT_WINDOW) {
+    rateLimitMap.set(ip, { count: 1, timestamp: now });
+    return true;
+  }
+  
+  if (record.count >= MAX_REQUESTS) {
+    return false;
+  }
+  
+  record.count += 1;
+  return true;
+}
+
 const client = new OpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY || '',
   baseURL: 'https://api.deepseek.com/v1',
@@ -82,8 +110,24 @@ function parseToolArguments<T extends z.ZodTypeAny>(argumentsJson: string, schem
 
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { choices: [{ message: { content: fallback('Hôm nay bạn đã hỏi đủ 10 câu rồi. Ngày mai quay lại trò chuyện tiếp nhé! 😅') } }] },
+        { status: 429 }
+      );
+    }
+
     const body = RequestSchema.safeParse(await req.json());
     if (!body.success) return NextResponse.json({ choices: [] }, { status: 400 });
+
+    const latestUserMessage = body.data.messages.filter(m => m.role === 'user').pop();
+    if (latestUserMessage && latestUserMessage.content.length > MAX_MESSAGE_LENGTH) {
+      return NextResponse.json(
+        { choices: [{ message: { content: fallback('Tin nhắn của bạn quá dài (tối đa 500 ký tự). Bạn hãy viết ngắn gọn hơn nhé! 😅') } }] },
+        { status: 400 }
+      );
+    }
 
     const formattedHistory = body.data.messages.map((message) => ({
       role: message.role === 'user' ? 'user' : 'assistant',
